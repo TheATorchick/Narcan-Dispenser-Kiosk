@@ -1,3 +1,55 @@
 @charset "UTF-8";
-/* CSS Document */
 
+/* CSS Document */
+/* Fonts and Colors */
+body {
+    font-family: "inter-18pt", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+    color: #2d2c33;
+    background-color: #8cd0d7;
+}
+
+h1 {
+    font-family: "inter-28pt", sans-serif;
+    font-weight: 700;
+    font-style: normal;
+    font-size: 36pt;
+}
+
+h2 {
+    font-family: "inter-24pt", sans-serif;
+    font-weight: 600;
+    font-style: normal;
+    font-size: 24pt;
+}
+
+h3 {
+    font-family: "inter-20pt", sans-serif;
+    font-weight: 500;
+    font-style: normal;
+    font-size: 20pt;
+}
+
+.title {
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.title h1 {
+    margin: 0;
+    text-align: center;
+}
+
+
+/* Bubbles */
+.bubble
+{
+    padding-left: 20px;
+    padding-right: 20px;
+    background-color: #0097a5;
+    border-radius: 20px;
+    border-color: #008080;
+}
