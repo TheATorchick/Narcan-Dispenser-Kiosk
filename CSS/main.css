@@ -10,6 +10,12 @@ body {
     background-color: #8cd0d7;
 }
 
+input,
+textarea,
+button {
+    font: inherit;
+}
+
 h1 {
     font-family: "inter-28pt", sans-serif;
     font-weight: 700;
@@ -37,7 +43,7 @@ h3 {
     align-items: center;
 }
 
-.title > :last-child {
+.title> :last-child {
     justify-self: end;
 }
 
@@ -49,17 +55,103 @@ h3 {
 
 /* Bubbles */
 .bubble {
-    padding-left: 20px;
-    padding-right: 20px;
     background-color: #0097a5;
     border-radius: 20px;
-    border-color: #008080;
+    border: 2px solid #008080;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.75rem 1.25rem;
+    color: inherit;
+    text-decoration: none;
 }
 
 /*Various Buttons/areas */
+/*Main page*/
+.dispenseButton,
+.otherButtons {
+    width: min(80vw, 32rem);
+    margin: 0 auto;
+}
+
 .dispenseButton {
+    display: grid;
+    place-items: center;
+}
+
+.dispenseButton button {
+    width: 100%;
+    height: min(70vh, 28rem);
+    box-sizing: border-box;
+}
+
+.otherButtons {
     display: flex;
-    justify-content: center;
     align-items: center;
-    min-height: 70vh;
+    gap: 1rem;
+    margin: 1rem auto 0;
+}
+
+.otherButtons > .bubble {
+    flex: 1;
+    min-width: 0;
+    height: 128px;
+    box-sizing: border-box;
+}
+
+/*contact*/
+.contactPanel {
+    display: block;
+    width: min(90vw, 50rem);
+    box-sizing: border-box;
+    padding: 1.5rem 2rem;
+    margin: 1rem auto;
+}
+
+.contactForm {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1rem;
+    min-width: 0;
+    margin: 0;
+}
+
+.contactFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.contactFields > div,
+.messageField {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.contactFields input {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.messageField textarea {
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.contactSubmit {
+    align-self: flex-end;
+    cursor: pointer;
+    background-color: #8cd0d7;
+}
+
+@media (max-width: 600px) {
+    .contactPanel {
+        padding: 1.25rem;
+    }
+
+    .contactFields {
+        grid-template-columns: 1fr;
+    }
 }

@@ -1,0 +1,62 @@
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Contact</title>
+    <link href="CSS/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.typekit.net/lzn5wlh.css">
+    <script src="scripts/scripts.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <div class="title">
+            <div class="home">
+                <button class="bubble" id="home-Button">
+                    <h2>Home</h2>
+                </button>
+            </div>
+            <h1>Narcan Dispenser Kiosk</h1>
+            <div class="dispense">
+                <button class="bubble" id="dispense-Button">
+                    <h2>Dispense</h2>
+                </button>
+            </div>
+        </div>
+        <div id="pageName">
+            <h2>Contact</h2>
+        </div>
+        <div class="bubble contactPanel">
+            <form class="contactForm" id="contactForm">
+                <div class="contactFields">
+                    <div>
+                        <label for="name">Name:</label>
+                        <input type="text" id="name" name="name" placeholder="Enter your name">
+                    </div>
+                    <div>
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" placeholder="Enter your email">
+                    </div>
+                </div>
+                <div class="messageField">
+                    <label for="message">Message:</label>
+                    <textarea id="message" name="message" rows="8" placeholder="Write your message"></textarea>
+                </div>
+                <button class="bubble contactSubmit" type="submit">Submit</button>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        const contactForm = document.querySelector("#contactForm");
+
+        contactForm.addEventListener("submit", (event) => {
+            event.preventDefault();
+            alert("Form submitted");
+            contactForm.reset();
+        });
+    </script>
+
+</body>
+
+</html>
