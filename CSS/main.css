@@ -2,18 +2,78 @@
 
 /* CSS Document */
 /* Fonts and Colors */
+:root {
+    --color-main: #0097a5;
+    --color-background: #8cd0d7;
+    --color-accent: #008080;
+    --color-text: #2d2c33;
+}
+
 body {
     font-family: "inter-18pt", sans-serif;
     font-weight: 400;
     font-style: normal;
-    color: #2d2c33;
-    background-color: #8cd0d7;
+    color: var(--color-text);
+    background-color: var(--color-background);
 }
 
 input,
 textarea,
 button {
     font: inherit;
+}
+
+button,
+a,
+select {
+    transition: transform 160ms ease, box-shadow 160ms ease, filter 160ms ease;
+}
+
+button:hover,
+a:hover,
+select:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.06);
+    box-shadow: 0 4px 10px rgb(0 0 0 / 18%);
+}
+
+button:active,
+a:active,
+select:active {
+    transform: translateY(0);
+}
+
+.reduced-motion *,
+.reduced-motion *::before,
+.reduced-motion *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+}
+
+.reduced-motion button:hover,
+.reduced-motion a:hover,
+.reduced-motion select:hover {
+    transform: none;
+    filter: none;
+    box-shadow: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    button,
+    a,
+    select {
+        transition: none;
+    }
+
+    button:hover,
+    a:hover,
+    select:hover {
+        transform: none;
+        filter: none;
+        box-shadow: none;
+    }
 }
 
 h1 {
@@ -59,9 +119,9 @@ h3 {
 
 /* Bubbles */
 .bubble {
-    background-color: #0097a5;
+    background-color: var(--color-main);
     border-radius: 20px;
-    border: 2px solid #008080;
+    border: 2px solid var(--color-accent);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -74,6 +134,10 @@ h3 {
 /*Main page*/
 .body .bubble {
     text-align: center;
+}
+
+#contact h2 {
+    line-height: 1;
 }
 
 .dispenseButton,
@@ -119,7 +183,7 @@ h3 {
 .contactDivider {
     width: 100%;
     border: 0;
-    border-top: 2px solid #008080;
+    border-top: 2px solid var(--color-accent);
     margin: 1rem 0;
 }
 
@@ -166,7 +230,7 @@ h3 {
 .contactSubmit {
     align-self: flex-end;
     cursor: pointer;
-    background-color: #8cd0d7;
+    background-color: var(--color-background);
 }
 
 @media (max-width: 600px) {
@@ -223,11 +287,11 @@ h3 {
     height: 2.5rem;
     place-items: center;
     box-sizing: border-box;
-    border: 2px solid #008080;
+    border: 2px solid var(--color-accent);
     border-radius: 50%;
     padding: 0;
     background-color: transparent;
-    color: #2d2c33;
+    color: var(--color-text);
     font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
@@ -237,10 +301,10 @@ h3 {
 .learnMoreToolbar select {
     box-sizing: border-box;
     padding: 0.55rem 0.75rem;
-    border: 2px solid #008080;
+    border: 2px solid var(--color-accent);
     border-radius: 0.5rem;
-    background-color: #8cd0d7;
-    color: #2d2c33;
+    background-color: var(--color-background);
+    color: var(--color-text);
     font: inherit;
 }
 
@@ -274,9 +338,12 @@ h3 {
 .learnMoreBubble {
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
     gap: 0.5rem;
     flex: 0 0 16rem;
-    min-height: 20rem;
+    height: 23rem;
+    min-height: 23rem;
     box-sizing: border-box;
     cursor: pointer;
     padding: 1rem 1rem 1.5rem;
@@ -285,19 +352,26 @@ h3 {
 
 .learnMoreBubble h2 {
     margin: 0;
+    display: flex;
+    flex: 0 0 4.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
 }
 
 .learnMoreBubble h3 {
-    margin: 0;
+    width: 100%;
+    margin: auto 0 0;
+    text-align: center;
 }
 
 .learnMoreImagePlaceholder {
     position: relative;
     overflow: hidden;
     display: block;
-    width: 75%;
-    max-width: 12rem;
-    aspect-ratio: 4 / 3;
+    width: 92%;
+    aspect-ratio: 1 / 1;
     background-color: #fff;
     border-radius: 0.5rem;
 }
@@ -331,6 +405,14 @@ h3 {
 
 .itemInformationText {
     min-width: 0;
+}
+
+.itemSectionDivider {
+    grid-column: 1 / -1;
+    width: 100%;
+    border: 0;
+    border-top: 2px solid var(--color-accent);
+    margin: 0;
 }
 
 .itemInformationHeader {
@@ -407,26 +489,35 @@ h3 {
 
 .relatedInfoCard {
     display: flex;
-    flex: 0 0 10rem;
+    flex: 0 0 16rem;
     flex-direction: column;
     align-items: center;
+    justify-content: flex-start;
     gap: 0.5rem;
+    height: 23rem;
+    min-height: 23rem;
     box-sizing: border-box;
-    padding: 0.75rem;
+    padding: 1rem 1rem 1.5rem;
     text-align: center;
     scroll-snap-align: start;
-    background-color: #8cd0d7;
+    background-color: var(--color-background);
 }
 
 .relatedInfoCard h3 {
-    margin: 0;
+    display: flex;
+    flex: 0 0 4.5rem;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin: auto 0 0;
+    text-align: center;
 }
 
 .relatedInfoImage {
     position: relative;
     overflow: hidden;
-    width: 100%;
-    aspect-ratio: 4 / 3;
+    width: 92%;
+    aspect-ratio: 1 / 1;
     background-color: #fff;
     border-radius: 0.5rem;
 }
@@ -449,7 +540,7 @@ h3 {
     grid-column: 1 / -1;
     justify-content: center;
     gap: 0.5rem;
-    padding-top: 1rem;
+    padding: 1rem 0;
 }
 
 .itemDispensing:empty {
@@ -459,10 +550,10 @@ h3 {
 .itemDispensing .bubble {
     width: 100%;
     box-sizing: border-box;
-    background-color: #8cd0d7;
+    background-color: var(--color-background);
     text-align: center;
-    padding-top: 1.5rem;
-    padding-bottom: 1.5rem;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
 }
 
 .itemDispensing h3 {
@@ -477,4 +568,165 @@ h3 {
     .itemImagePlaceholder {
         min-height: 12rem;
     }
+}
+
+/* Entry page */
+.entryPage {
+    display: flex;
+    min-height: calc(100vh - 4rem);
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+    padding: 2rem;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+.entryPage p {
+    max-width: 40rem;
+    margin: 0;
+}
+
+.entryPage h1 {
+    margin: 0;
+}
+
+.entryButtons {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+}
+
+.entryButtons .bubble {
+    min-width: 12rem;
+    padding: 1.25rem 2rem;
+    box-sizing: border-box;
+    text-align: center;
+    text-decoration: none;
+}
+
+.entryFooter {
+    display: flex;
+    min-height: 1.25rem;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.footerReveal {
+    display: block;
+    width: 100%;
+    height: 1.25rem;
+    padding: 0;
+    border: 0;
+    background: var(--color-background);
+    cursor: pointer;
+}
+
+.footerReveal:hover,
+.footerReveal:active {
+    transform: none;
+    filter: none;
+    box-shadow: none;
+}
+
+.footerLinks {
+    display: flex;
+    min-height: 3rem;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.footerLinks[hidden] {
+    display: none;
+}
+
+.footerLinks a {
+    color: inherit;
+}
+
+@media (max-width: 600px) {
+    .entryButtons {
+        flex-direction: column;
+    }
+}
+
+/* Settings page */
+.settingsPage {
+    width: min(90vw, 42rem);
+    margin: 2rem auto;
+}
+
+.settingsPage > p {
+    text-align: center;
+}
+
+.settingsForm {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 20px;
+    background-color: var(--color-background);
+}
+
+.settingsForm input[type="color"] {
+    width: 3.5rem;
+    height: 2.5rem;
+    padding: 0.15rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 0.4rem;
+    background: transparent;
+}
+
+.colorControl {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.settingsForm .hexInput {
+    width: 5.5rem;
+    padding: 0.45rem;
+    border: 1px solid var(--color-accent);
+    border-radius: 0.4rem;
+    color: var(--color-text);
+    background: var(--color-background);
+    font: inherit;
+    text-transform: uppercase;
+}
+
+.settingsForm .motionSetting,
+.settingsActions,
+#settingsStatus {
+    grid-column: 1 / -1;
+}
+
+.settingsForm .motionSetting {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+}
+
+.settingsActions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.settingsActions .bubble {
+    min-width: 10rem;
+    font: inherit;
+    cursor: pointer;
+}
+
+#settingsStatus {
+    min-height: 1.5em;
+    margin: 0;
+    text-align: center;
 }

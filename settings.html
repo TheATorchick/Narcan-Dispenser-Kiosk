@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings | Narcan Dispenser Kiosk</title>
+    <link href="CSS/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.typekit.net/lzn5wlh.css">
+    <script src="scripts/scripts.js" defer></script>
+</head>
+<body>
+    <main class="settingsPage">
+        <div class="title pageName"><h1>Settings</h1></div>
+        <p>Choose the colors for the site and whether to reduce motion effects.</p>
+        <form id="settingsForm" class="settingsForm">
+            <label for="mainColor">Main color</label>
+            <div class="colorControl">
+                <input id="mainColorHex" class="hexInput" type="text" value="#0097a5" aria-label="Main color hex code" inputmode="text" maxlength="7" spellcheck="false">
+                <input id="mainColor" name="mainColor" type="color" value="#0097a5">
+            </div>
+
+            <label for="backgroundColor">Background color</label>
+            <div class="colorControl">
+                <input id="backgroundColorHex" class="hexInput" type="text" value="#8cd0d7" aria-label="Background color hex code" inputmode="text" maxlength="7" spellcheck="false">
+                <input id="backgroundColor" name="backgroundColor" type="color" value="#8cd0d7">
+            </div>
+
+            <label for="accentColor">Accent color</label>
+            <div class="colorControl">
+                <input id="accentColorHex" class="hexInput" type="text" value="#008080" aria-label="Accent color hex code" inputmode="text" maxlength="7" spellcheck="false">
+                <input id="accentColor" name="accentColor" type="color" value="#008080">
+            </div>
+
+            <label for="textColor">Text color</label>
+            <div class="colorControl">
+                <input id="textColorHex" class="hexInput" type="text" value="#2d2c33" aria-label="Text color hex code" inputmode="text" maxlength="7" spellcheck="false">
+                <input id="textColor" name="textColor" type="color" value="#2d2c33">
+            </div>
+
+            <label class="motionSetting" for="reducedMotion">
+                <input id="reducedMotion" name="reducedMotion" type="checkbox">
+                Reduce motion effects
+            </label>
+            <div class="settingsActions">
+                <button class="bubble" id="defaultSettings" type="button">Default settings</button>
+                <button class="bubble" id="saveSettings" type="button">Save settings</button>
+                <a class="bubble" href="home.html">Home</a>
+            </div>
+            <p id="settingsStatus" role="status" aria-live="polite"></p>
+        </form>
+    </main>
+    <script>
+        const settingsForm = document.querySelector("#settingsForm");
+        const settingsStatus = document.querySelector("#settingsStatus");
+        const defaultSettings = {
+            mainColor: "#0097a5",
+            backgroundColor: "#8cd0d7",
+            accentColor: "#008080",
+            textColor: "#2d2c33",
+            reducedMotion: false
+        };
+
+        function renderSettings(settings) {
+            for (const key of ["mainColor", "backgroundColor", "accentColor", "textColor"]) {
+                if (/^#[0-9a-f]{6}$/i.test(settings[key] || "")) {
+                    settingsForm.elements[key].value = settings[key];
+                    document.querySelector(`#${key}Hex`).value = settings[key];
+                }
+            }
+            settingsForm.elements.reducedMotion.checked = settings.reducedMotion === true;
+        }
+
+        document.querySelector("#defaultSettings").addEventListener("click", () => {
+            renderSettings(defaultSettings);
+            settingsForm.dispatchEvent(new Event("input", { bubbles: true }));
+            settingsStatus.textContent = "Default settings restored. Save settings to keep them.";
+        });
+
+        const colorKeys = ["mainColor", "backgroundColor", "accentColor", "textColor"];
+        colorKeys.forEach(key => {
+            const picker = settingsForm.elements[key];
+            const hexInput = document.querySelector(`#${key}Hex`);
+            picker.addEventListener("input", () => {
+                hexInput.value = picker.value;
+                hexInput.setCustomValidity("");
+            });
+            hexInput.addEventListener("input", () => {
+                const hex = hexInput.value.trim();
+                if (/^#?[0-9a-f]{6}$/i.test(hex)) {
+                    picker.value = hex.startsWith("#") ? hex : `#${hex}`;
+                    hexInput.value = picker.value;
+                    hexInput.setCustomValidity("");
+                } else {
+                    hexInput.setCustomValidity("Enter a six-digit hex color, such as #0097a5.");
+                }
+            });
+        });
+
+        let localSettings = null;
+        try {
+            localSettings = JSON.parse(localStorage.getItem("kioskSettings"));
+        } catch (_) {}
+
+        if (localSettings && typeof localSettings === "object") {
+            renderSettings(localSettings);
+            settingsStatus.textContent = "Loaded your saved settings from this browser.";
+        } else {
+            fetch("settings.json")
+                .then(response => {
+                    if (!response.ok) throw new Error("Settings file could not be loaded.");
+                    return response.json();
+                })
+                .then(renderSettings)
+                .catch(() => {
+                    settingsStatus.textContent = "Could not load settings.json. The default colors are shown.";
+                });
+        }
+
+        settingsForm.addEventListener("submit", event => event.preventDefault());
+        settingsForm.addEventListener("input", () => {
+            const fields = Object.fromEntries(new FormData(settingsForm));
+            document.documentElement.style.setProperty("--color-main", fields.mainColor);
+            document.documentElement.style.setProperty("--color-background", fields.backgroundColor);
+            document.documentElement.style.setProperty("--color-accent", fields.accentColor);
+            document.documentElement.style.setProperty("--color-text", fields.textColor);
+            document.documentElement.classList.toggle("reduced-motion", settingsForm.elements.reducedMotion.checked);
+        });
+
+        document.querySelector("#saveSettings").addEventListener("click", () => {
+            const invalidHex = [...document.querySelectorAll(".hexInput")].find(input => !input.checkValidity());
+            if (invalidHex) {
+                invalidHex.reportValidity();
+                return;
+            }
+            const settings = {
+                mainColor: settingsForm.elements.mainColor.value,
+                backgroundColor: settingsForm.elements.backgroundColor.value,
+                accentColor: settingsForm.elements.accentColor.value,
+                textColor: settingsForm.elements.textColor.value,
+                reducedMotion: settingsForm.elements.reducedMotion.checked
+            };
+            try {
+                localStorage.setItem("kioskSettings", JSON.stringify(settings));
+                settingsStatus.textContent = "Settings saved in this browser for this site.";
+            } catch (error) {
+                settingsStatus.textContent = "Your browser could not save settings locally.";
+            }
+        });
+    </script>
+</body>
+</html>

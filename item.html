@@ -40,7 +40,9 @@
             <div class="itemImagePlaceholder">
                 <img id="itemImage" alt="" hidden>
             </div>
+            <hr class="itemSectionDivider" id="contentDivider" hidden>
             <div class="itemDispensing" id="itemDispensing"></div>
+            <hr class="itemSectionDivider" id="dispenseDivider" hidden>
             <section class="itemRelevantPages" id="relatedItemsSection" hidden>
                 <h3>Relevant Pages</h3>
                 <div class="relatedInfoList" id="relatedItemsList"></div>
@@ -57,6 +59,8 @@
         const relatedItemsSection = document.querySelector("#relatedItemsSection");
         const relatedItemsList = document.querySelector("#relatedItemsList");
         const itemDispensing = document.querySelector("#itemDispensing");
+        const contentDivider = document.querySelector("#contentDivider");
+        const dispenseDivider = document.querySelector("#dispenseDivider");
 
         function addRelatedItemCards(names, items, list) {
             if (!Array.isArray(names) || names.length === 0) {
@@ -146,6 +150,11 @@
 
                 relatedItemsSection.hidden = !addRelatedItemCards(item.relatedItems, items, relatedItemsList);
                 addDispenseButtons(item.dispenses, itemDispensing);
+
+                const hasDispenseButtons = itemDispensing.children.length > 0;
+                const hasRelevantPages = !relatedItemsSection.hidden;
+                contentDivider.hidden = !(hasDispenseButtons || hasRelevantPages);
+                dispenseDivider.hidden = !(hasDispenseButtons && hasRelevantPages);
             })
             .catch(() => {
                 itemDescription.textContent = `Information about ${itemKey} will go here.`;
