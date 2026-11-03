@@ -52,6 +52,10 @@ h3 {
     text-align: center;
 }
 
+.pageName {
+    text-align: center;
+}
+
 
 /* Bubbles */
 .bubble {
@@ -68,6 +72,10 @@ h3 {
 
 /*Various Buttons/areas */
 /*Main page*/
+.body .bubble {
+    text-align: center;
+}
+
 .dispenseButton,
 .otherButtons {
     width: min(80vw, 32rem);
@@ -100,6 +108,21 @@ h3 {
 }
 
 /*contact*/
+.contactPanel h3 {
+    margin-bottom: 0.5em;
+}
+
+.contactPanel > p {
+    margin-top: 0.5em;
+}
+
+.contactDivider {
+    width: 100%;
+    border: 0;
+    border-top: 2px solid #008080;
+    margin: 1rem 0;
+}
+
 .contactPanel {
     display: block;
     width: min(90vw, 50rem);
@@ -154,4 +177,22 @@ h3 {
     .contactFields {
         grid-template-columns: 1fr;
     }
+}
+
+/*Dispense*/
+.dispenseRow {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 0.5rem;
+    width: min(80vw, 32rem);
+    margin: 1rem auto;
+}
+
+.dispenseRow button {
+    min-height: 128px;
+    text-align: center;
+}
+
+.dispenseRow h3 {
+    margin: 0;
 }

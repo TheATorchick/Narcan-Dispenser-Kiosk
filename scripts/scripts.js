@@ -4,10 +4,14 @@
 const dispenseButton = document.querySelector("#dispense-Button");
 const homeButton = document.querySelector("#home-Button");
 
-dispenseButton.addEventListener("click", () => {
-  window.location.href = "dispense.html";
-});
+if (dispenseButton) {
+  dispenseButton.addEventListener("click", () => {
+    window.location.href = "dispense.html";
+  });
+}
 
-homeButton.addEventListener("click", () => {
-  window.location.href = "index.html";
-});
+if (homeButton) {
+  homeButton.addEventListener("click", () => {
+    window.location.href = "index.html";
+  });
+}
