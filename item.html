@@ -1,0 +1,156 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dispensable Information</title>
+    <link href="CSS/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.typekit.net/lzn5wlh.css">
+    <script src="scripts/scripts.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <div class="title">
+            <div class="home">
+                <button class="bubble" id="home-Button" type="button">
+                    <h2>Home</h2>
+                </button>
+            </div>
+            <h1>Narcan Dispenser Kiosk</h1>
+            <div class="dispense">
+                <button class="bubble" id="dispense-Button" type="button">
+                    <h2>Dispense</h2>
+                </button>
+            </div>
+        </div>
+        <div class="bubble itemInformation">
+            <div class="itemInformationHeader">
+                <a class="itemBack" href="learnMore.html" aria-label="Back to Learn More">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                        <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                        <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                    </svg>
+                </a>
+                <h2 id="itemName"></h2>
+            </div>
+            <div class="itemInformationText">
+                <p id="itemDescription"></p>
+            </div>
+            <div class="itemImagePlaceholder">
+                <img id="itemImage" alt="" hidden>
+            </div>
+            <div class="itemDispensing" id="itemDispensing"></div>
+            <section class="itemRelevantPages" id="relatedItemsSection" hidden>
+                <h3>Relevant Pages</h3>
+                <div class="relatedInfoList" id="relatedItemsList"></div>
+            </section>
+        </div>
+    </main>
+
+    <script>
+        const itemDetails = new URLSearchParams(window.location.search);
+        const itemKey = itemDetails.get("item") || "Dispensable";
+        const itemNameHeading = document.querySelector("#itemName");
+        const itemDescription = document.querySelector("#itemDescription");
+        const itemImage = document.querySelector("#itemImage");
+        const relatedItemsSection = document.querySelector("#relatedItemsSection");
+        const relatedItemsList = document.querySelector("#relatedItemsList");
+        const itemDispensing = document.querySelector("#itemDispensing");
+
+        function addRelatedItemCards(names, items, list) {
+            if (!Array.isArray(names) || names.length === 0) {
+                return false;
+            }
+
+            names.forEach((name) => {
+                const relatedItem = items[name];
+                const card = document.createElement("a");
+                const imagePlaceholder = document.createElement("span");
+                const heading = document.createElement("h3");
+                card.className = "bubble relatedInfoCard";
+                card.href = `item.html?item=${encodeURIComponent(name)}`;
+                heading.textContent = relatedItem?.name || name;
+                imagePlaceholder.className = "relatedInfoImage";
+
+                if (relatedItem?.imagePath) {
+                    const image = document.createElement("img");
+                    image.alt = relatedItem.name || name;
+                    image.addEventListener("load", () => {
+                        image.hidden = false;
+                    }, { once: true });
+                    image.addEventListener("error", () => {
+                        image.hidden = true;
+                    }, { once: true });
+                    image.src = relatedItem.imagePath;
+                    imagePlaceholder.appendChild(image);
+                }
+
+                card.append(imagePlaceholder, heading);
+                list.appendChild(card);
+            });
+            return true;
+        }
+
+        function addDispenseButtons(names, container) {
+            if (!Array.isArray(names)) {
+                return;
+            }
+
+            names.forEach((name, index) => {
+                const button = document.createElement("button");
+                const heading = document.createElement("h3");
+                button.className = "bubble dispenseItemButton";
+                button.type = "button";
+                button.dataset.item = name;
+                button.dataset.sourceItem = itemKey;
+                button.dataset.dispenseIndex = index;
+                heading.textContent = `Dispense ${name}`;
+                button.appendChild(heading);
+                container.appendChild(button);
+            });
+        }
+
+        itemNameHeading.textContent = itemKey;
+        document.title = `${itemKey} Information`;
+
+        fetch("itemInformation.json")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Could not load information.");
+                }
+                return response.json();
+            })
+            .then((items) => {
+                const item = items[itemKey];
+                if (!item) {
+                    itemDescription.textContent = `Information about ${itemKey} will go here.`;
+                    return;
+                }
+
+                const displayName = item.name || itemKey;
+                itemNameHeading.textContent = displayName;
+                itemDescription.textContent = item.description || "";
+                document.title = `${displayName} Information`;
+
+                if (item.imagePath) {
+                    itemImage.alt = displayName;
+                    itemImage.addEventListener("load", () => {
+                        itemImage.hidden = false;
+                    }, { once: true });
+                    itemImage.addEventListener("error", () => {
+                        itemImage.hidden = true;
+                    }, { once: true });
+                    itemImage.src = item.imagePath;
+                }
+
+                relatedItemsSection.hidden = !addRelatedItemCards(item.relatedItems, items, relatedItemsList);
+                addDispenseButtons(item.dispenses, itemDispensing);
+            })
+            .catch(() => {
+                itemDescription.textContent = `Information about ${itemKey} will go here.`;
+            });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<!doctype html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Dispensing Confirmation</title>
+    <link href="CSS/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.typekit.net/lzn5wlh.css">
+    <script src="scripts/scripts.js" defer></script>
+</head>
+
+<body>
+    <main>
+        <div class="title">
+            <div class="home" aria-hidden="true"></div>
+            <h1>Narcan Dispenser Kiosk</h1>
+            <div class="dispense" aria-hidden="true"></div>
+        </div>
+        <div class="pageName">
+            <h2>Dispensing <span data-dispensed-item></span></h2>
+            <p>Please wait while your <span data-dispensed-item></span> is dispensed.</p>
+        </div>
+    </main>
+
+    <script>
+        const dispenseParams = new URLSearchParams(window.location.search);
+
+        async function getDispensedItem() {
+            const directItem = dispenseParams.get("item");
+            if (directItem) {
+                return directItem;
+            }
+
+            const sourceItem = dispenseParams.get("source");
+            if (!sourceItem) {
+                return "selected product";
+            }
+
+            try {
+                const response = await fetch("itemInformation.json");
+                if (!response.ok) {
+                    throw new Error("Could not load information.");
+                }
+                const items = await response.json();
+                const dispenses = items[sourceItem]?.dispenses;
+                const index = Number.parseInt(dispenseParams.get("index") || "0", 10);
+                return Array.isArray(dispenses) ? dispenses[index] || sourceItem : sourceItem;
+            } catch {
+                return sourceItem;
+            }
+        }
+
+        getDispensedItem().then((item) => {
+            document.querySelectorAll("[data-dispensed-item]").forEach((element) => {
+                element.textContent = item;
+            });
+            document.title = `${item} Dispensed`;
+
+            window.setTimeout(() => {
+                alert(`${item} has been dispensed. Thank you for using the kiosk`);
+                window.location.href = "index.html";
+            }, 4000);
+        });
+    </script>
+</body>
+
+</html>

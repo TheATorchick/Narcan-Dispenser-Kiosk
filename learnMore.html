@@ -26,7 +26,111 @@
         <div class="pageName">
             <h2>Learn More</h2>
         </div>
+        <div class="learnMoreToolbar">
+            <button class="learnMoreAddPlaceholder" id="toggleLearnMoreSearch" type="button" aria-label="Show search" aria-expanded="false">+</button>
+            <input id="learnMoreSearch" type="search" placeholder="Search dispensables and drugs" aria-label="Search dispensables and drugs" hidden>
+            <label for="learnMoreSort">Sort by</label>
+            <select id="learnMoreSort">
+                <option value="name-asc">Name (A–Z)</option>
+                <option value="name-desc">Name (Z–A)</option>
+                <option value="category">Category</option>
+            </select>
+        </div>
+        <div class="learnMoreList" id="learnMoreList"></div>
     </main>
+
+    <script>
+        const learnMoreList = document.querySelector("#learnMoreList");
+        const learnMoreSearch = document.querySelector("#learnMoreSearch");
+        const learnMoreSort = document.querySelector("#learnMoreSort");
+        const toggleLearnMoreSearch = document.querySelector("#toggleLearnMoreSearch");
+
+        fetch("itemInformation.json")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Could not load item information.");
+                }
+                return response.json();
+            })
+            .then((items) => {
+                const itemEntries = Object.entries(items);
+
+                function renderCards() {
+                    const searchTerm = learnMoreSearch.value.trim().toLowerCase();
+                    const visibleItems = itemEntries.filter(([itemKey, item]) => {
+                        const searchableText = [itemKey, item.name, item.category, item.description]
+                            .filter(Boolean)
+                            .join(" ")
+                            .toLowerCase();
+                        return searchableText.includes(searchTerm);
+                    });
+
+                    visibleItems.sort(([keyA, itemA], [keyB, itemB]) => {
+                        if (learnMoreSort.value === "category") {
+                            const categoryOrder = (itemA.category || "Dispensable").localeCompare(itemB.category || "Dispensable");
+                            if (categoryOrder !== 0) return categoryOrder;
+                        }
+
+                        const nameA = itemA.name || keyA;
+                        const nameB = itemB.name || keyB;
+                        const nameOrder = nameA.localeCompare(nameB);
+                        return learnMoreSort.value === "name-desc" ? -nameOrder : nameOrder;
+                    });
+
+                    learnMoreList.replaceChildren();
+                    visibleItems.forEach(([itemKey, item]) => {
+                        const card = document.createElement("button");
+                        const name = document.createElement("h2");
+                        const imagePlaceholder = document.createElement("span");
+                        const category = document.createElement("h3");
+
+                        card.className = "bubble learnMoreBubble learnMoreItemButton";
+                        card.type = "button";
+                        card.dataset.item = itemKey;
+                        name.textContent = item.name || itemKey;
+                        imagePlaceholder.className = "learnMoreImagePlaceholder";
+                        imagePlaceholder.setAttribute("aria-hidden", "true");
+                        category.textContent = item.category || "Dispensable";
+
+                        if (item.imagePath) {
+                            const image = document.createElement("img");
+                            image.alt = "";
+                            image.addEventListener("load", () => {
+                                image.hidden = false;
+                            }, { once: true });
+                            image.addEventListener("error", () => {
+                                image.hidden = true;
+                            }, { once: true });
+                            image.src = item.imagePath;
+                            imagePlaceholder.appendChild(image);
+                        }
+
+                        card.append(name, imagePlaceholder, category);
+                        learnMoreList.appendChild(card);
+                    });
+                }
+
+                learnMoreSearch.addEventListener("input", renderCards);
+                learnMoreSort.addEventListener("change", renderCards);
+                toggleLearnMoreSearch.addEventListener("click", () => {
+                    const showSearch = learnMoreSearch.hidden;
+                    learnMoreSearch.hidden = !showSearch;
+                    toggleLearnMoreSearch.setAttribute("aria-expanded", String(showSearch));
+                    toggleLearnMoreSearch.setAttribute("aria-label", showSearch ? "Hide search" : "Show search");
+
+                    if (showSearch) {
+                        learnMoreSearch.focus();
+                    } else {
+                        learnMoreSearch.value = "";
+                        renderCards();
+                    }
+                });
+                renderCards();
+            })
+            .catch(() => {
+                learnMoreList.textContent = "Information could not be loaded.";
+            });
+    </script>
 
 </body>
 

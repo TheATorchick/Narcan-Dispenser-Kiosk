@@ -180,9 +180,19 @@ h3 {
 }
 
 /*Dispense*/
+.dispenseList {
+    width: min(90vw, 38rem);
+    max-height: 65vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
+    margin: 0 auto;
+    padding: 0.5rem;
+}
+
 .dispenseRow {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2.5fr);
     gap: 0.5rem;
     width: min(80vw, 32rem);
     margin: 1rem auto;
@@ -195,4 +205,276 @@ h3 {
 
 .dispenseRow h3 {
     margin: 0;
+}
+
+/*Learn More*/
+.learnMoreToolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    width: min(90vw, 40rem);
+    box-sizing: border-box;
+    margin: 1rem auto 0;
+}
+
+.learnMoreAddPlaceholder {
+    display: grid;
+    flex: 0 0 2.5rem;
+    height: 2.5rem;
+    place-items: center;
+    box-sizing: border-box;
+    border: 2px solid #008080;
+    border-radius: 50%;
+    padding: 0;
+    background-color: transparent;
+    color: #2d2c33;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.learnMoreToolbar input,
+.learnMoreToolbar select {
+    box-sizing: border-box;
+    padding: 0.55rem 0.75rem;
+    border: 2px solid #008080;
+    border-radius: 0.5rem;
+    background-color: #8cd0d7;
+    color: #2d2c33;
+    font: inherit;
+}
+
+.learnMoreToolbar input {
+    flex: 1;
+    min-width: 0;
+}
+
+.learnMoreToolbar input[hidden] {
+    display: none;
+}
+
+.learnMoreToolbar label {
+    margin-left: auto;
+    white-space: nowrap;
+}
+
+.learnMoreList {
+    display: flex;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    gap: 1rem;
+    width: min(90vw, 40rem);
+    box-sizing: border-box;
+    margin: 1rem auto;
+    padding: 0.5rem;
+}
+
+.learnMoreBubble {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 0 0 16rem;
+    min-height: 20rem;
+    box-sizing: border-box;
+    cursor: pointer;
+    padding: 1rem 1rem 1.5rem;
+    scroll-snap-align: start;
+}
+
+.learnMoreBubble h2 {
+    margin: 0;
+}
+
+.learnMoreBubble h3 {
+    margin: 0;
+}
+
+.learnMoreImagePlaceholder {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    width: 75%;
+    max-width: 12rem;
+    aspect-ratio: 4 / 3;
+    background-color: #fff;
+    border-radius: 0.5rem;
+}
+
+.learnMoreImagePlaceholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.learnMoreImagePlaceholder img[hidden] {
+    display: none;
+}
+
+/*Dispensable Information*/
+.itemInformation {
+    display: grid;
+    grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
+    align-items: stretch;
+    gap: 1.5rem;
+    width: min(90vw, 50rem);
+    max-height: 65vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    box-sizing: border-box;
+    padding: 1.5rem 2rem;
+    margin: 1rem auto;
+}
+
+.itemInformationText {
+    min-width: 0;
+}
+
+.itemInformationHeader {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    grid-column: 1 / -1;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    padding: 0.5rem 0;
+}
+
+.itemBack {
+    justify-self: start;
+    display: block;
+    width: 1.5rem;
+    height: 1.5rem;
+    color: inherit;
+}
+
+.itemInformationHeader h2 {
+    grid-column: 2;
+    margin: 0;
+    text-align: center;
+}
+
+.itemBack svg {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+
+.itemImagePlaceholder {
+    position: relative;
+    overflow: hidden;
+    min-height: 18rem;
+    background-color: #fff;
+    border-radius: 0.5rem;
+}
+
+.itemImagePlaceholder img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.itemImagePlaceholder img[hidden] {
+    display: none;
+}
+
+.itemRelevantPages {
+    grid-column: 1 / -1;
+    min-width: 0;
+}
+
+.itemRelevantPages > h3 {
+    margin: 1.25rem 0 0.5rem;
+}
+
+.relatedInfoList {
+    display: flex;
+    gap: 0.75rem;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    scroll-snap-type: x proximity;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0.5rem;
+}
+
+.relatedInfoCard {
+    display: flex;
+    flex: 0 0 10rem;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    box-sizing: border-box;
+    padding: 0.75rem;
+    text-align: center;
+    scroll-snap-align: start;
+    background-color: #8cd0d7;
+}
+
+.relatedInfoCard h3 {
+    margin: 0;
+}
+
+.relatedInfoImage {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    background-color: #fff;
+    border-radius: 0.5rem;
+}
+
+.relatedInfoImage img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.relatedInfoImage img[hidden] {
+    display: none;
+}
+
+.itemDispensing {
+    display: flex;
+    flex-wrap: wrap;
+    grid-column: 1 / -1;
+    justify-content: center;
+    gap: 0.5rem;
+    padding-top: 1rem;
+}
+
+.itemDispensing:empty {
+    display: none;
+}
+
+.itemDispensing .bubble {
+    width: 100%;
+    box-sizing: border-box;
+    background-color: #8cd0d7;
+    text-align: center;
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+}
+
+.itemDispensing h3 {
+    margin: 0;
+}
+
+@media (max-width: 600px) {
+    .itemInformation {
+        grid-template-columns: 1fr;
+    }
+
+    .itemImagePlaceholder {
+        min-height: 12rem;
+    }
 }

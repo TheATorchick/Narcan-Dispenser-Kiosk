@@ -22,15 +22,53 @@
         <div class="pageName">
             <h2>Dispense Page</h2>
         </div>
-        <div class="dispenseRow">
-            <button class="bubble" type="button">
-                <h3>Learn More</h3>
-            </button>
-            <button class="bubble" type="button">
-                <h3>Dispense Narcan</h3>
-            </button>
-        </div>
+        <div class="dispenseList" id="dispenseList"></div>
     </main>
+
+    <script>
+        const dispenseList = document.querySelector("#dispenseList");
+
+        fetch("itemInformation.json")
+            .then((response) => {
+                if (!response.ok) {
+                    throw new Error("Could not load information.");
+                }
+                return response.json();
+            })
+            .then((items) => {
+                Object.entries(items).forEach(([itemKey, item]) => {
+                    if (item.category !== "Dispensable") {
+                        return;
+                    }
+
+                    const name = item.name || itemKey;
+                    const row = document.createElement("div");
+                    const learnMoreButton = document.createElement("button");
+                    const learnMoreHeading = document.createElement("h3");
+                    const dispenseButton = document.createElement("button");
+                    const dispenseHeading = document.createElement("h3");
+
+                    row.className = "dispenseRow";
+                    learnMoreButton.className = "bubble learnMoreItemButton";
+                    learnMoreButton.type = "button";
+                    learnMoreButton.dataset.item = itemKey;
+                    learnMoreHeading.textContent = "Learn More";
+                    learnMoreButton.appendChild(learnMoreHeading);
+
+                    dispenseButton.className = "bubble dispenseItemButton";
+                    dispenseButton.type = "button";
+                    dispenseButton.dataset.item = name;
+                    dispenseHeading.textContent = `Dispense ${name}`;
+                    dispenseButton.appendChild(dispenseHeading);
+
+                    row.append(learnMoreButton, dispenseButton);
+                    dispenseList.appendChild(row);
+                });
+            })
+            .catch(() => {
+                dispenseList.textContent = "Dispensables could not be loaded.";
+            });
+    </script>
 
 </body>
 
