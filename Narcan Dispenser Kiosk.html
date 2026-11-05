@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8cd0d7">
+    <title>Narcan Dispenser Kiosk</title>
+    <link href="CSS/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.typekit.net/lzn5wlh.css">
+    <script src="scripts/kiosk-app.js" defer></script>
+</head>
+<body>
+    <div id="app" aria-live="polite"></div>
+
+    <template id="view-home">
+        <main>
+            <div class="title homePageTitle">
+                <div class="home" aria-hidden="true"></div>
+                <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+                <div class="dispense" aria-hidden="true"></div>
+            </div>
+            <div class="body">
+                <div class="dispenseButton">
+                    <a class="bubble" href="#dispense">
+                        <h1>Dispense</h1>
+                    </a>
+                </div>
+                <div class="otherButtons">
+                    <a class="bubble" href="#learn-more">
+                        <h2>Learn More</h2>
+                    </a>
+                    <a class="bubble" href="#contact">
+                        <h2>Get in Contact</h2>
+                    </a>
+                </div>
+            </div>
+        </main>
+        <footer class="entryFooter">
+            <button class="footerReveal" type="button" aria-label="Show footer links" aria-expanded="false" aria-controls="footerLinks"></button>
+            <nav class="footerLinks" id="footerLinks" aria-label="Footer navigation" hidden>
+                <a href="admin.html">Admin</a>
+                <a href="#about">About</a>
+            </nav>
+        </footer>
+    </template>
+
+    <template id="view-admin">
+        <main class="entryPage">
+            <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+            <h3 class="adminName">Sean Kelley</h3>
+            <nav class="adminButtonRows" aria-label="Main menu">
+                <div class="adminButtonRow adminProjectButtons">
+                    <a class="bubble" href="home.html">HTML version</a>
+                    <a class="bubble" href="Narcan%20Dispenser%20Kiosk.html">Final Project</a>
+                </div>
+                <div class="adminButtonRow adminToolsButtons">
+                    <a class="bubble" href="#settings">Settings</a>
+                    <a class="bubble" href="#background">Background</a>
+                    <a class="bubble" href="#about">About</a>
+                </div>
+            </nav>
+        </main>
+    </template>
+
+    <template id="view-about">
+        <main class="entryPage aboutPage">
+            <h1>About</h1>
+            <p>This site provides information about the Narcan dispenser kiosk and the items it offers.</p>
+            <nav class="entryButtons" aria-label="Page navigation">
+                <a class="bubble" href="admin.html">Admin</a>
+                <a class="bubble" href="#home">Home</a>
+            </nav>
+        </main>
+    </template>
+
+    <template id="view-background">
+        <a class="itemBack backgroundBack" href="admin.html" aria-label="Back to Admin">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            </svg>
+        </a>
+        <div class="backgroundControls" hidden>
+            <button class="bubble backgroundPanelToggle" id="hideBackgroundSettings" type="button">
+                Hide settings
+            </button>
+            <div class="backgroundSetting">
+                <label for="magnifierCount">
+                    Images <output id="magnifierCountValue" for="magnifierCount">40</output>
+                </label>
+                <input id="magnifierCount" type="range" min="1" max="1000" value="40">
+            </div>
+            <div class="backgroundSetting">
+                <label for="magnifierSpeed">
+                    Fall speed <output id="magnifierSpeedValue" for="magnifierSpeed">1×</output>
+                </label>
+                <input id="magnifierSpeed" type="range" min="0.5" max="10" step="0.5" value="1">
+            </div>
+            <div class="backgroundSetting">
+                <label for="magnifierSize">
+                    Magnifier size <output id="magnifierSizeValue" for="magnifierSize">2.5rem</output>
+                </label>
+                <input id="magnifierSize" type="range" min="1" max="8" step="0.5" value="2.5">
+            </div>
+            <div class="backgroundSetting">
+                <label for="magnifierOpacity">
+                    Opacity <output id="magnifierOpacityValue" for="magnifierOpacity">14%</output>
+                </label>
+                <input id="magnifierOpacity" type="range" min="5" max="100" value="14">
+            </div>
+            <button class="bubble" id="backgroundDefaults" type="button">Default</button>
+        </div>
+        <button class="bubble backgroundPanelShow" id="showBackgroundSettings" type="button">
+            Show settings
+        </button>
+    </template>
+
+    <template id="view-settings">
+        <main class="settingsPage">
+            <div class="title pageName">
+                <h1>Settings</h1>
+            </div>
+            <p>Choose the colors for the site and whether to reduce motion effects.</p>
+            <form id="settingsForm" class="settingsForm">
+                <label for="mainColor">Main color</label>
+                <div class="colorControl">
+                    <input id="mainColorHex" class="hexInput" type="text" value="#0097a5"
+                        aria-label="Main color hex code" maxlength="7" spellcheck="false">
+                    <input id="mainColor" name="mainColor" type="color" value="#0097a5">
+                </div>
+                <label for="backgroundColor">Background color</label>
+                <div class="colorControl">
+                    <input id="backgroundColorHex" class="hexInput" type="text" value="#8cd0d7"
+                        aria-label="Background color hex code" maxlength="7" spellcheck="false">
+                    <input id="backgroundColor" name="backgroundColor" type="color" value="#8cd0d7">
+                </div>
+                <label for="accentColor">Accent color</label>
+                <div class="colorControl">
+                    <input id="accentColorHex" class="hexInput" type="text" value="#008080"
+                        aria-label="Accent color hex code" maxlength="7" spellcheck="false">
+                    <input id="accentColor" name="accentColor" type="color" value="#008080">
+                </div>
+                <label for="textColor">Text color</label>
+                <div class="colorControl">
+                    <input id="textColorHex" class="hexInput" type="text" value="#2d2c33"
+                        aria-label="Text color hex code" maxlength="7" spellcheck="false">
+                    <input id="textColor" name="textColor" type="color" value="#2d2c33">
+                </div>
+                <label class="motionSetting" for="reducedMotion">
+                    <input id="reducedMotion" name="reducedMotion" type="checkbox">
+                    Reduce motion effects
+                </label>
+                <div class="settingsActions">
+                    <button class="bubble" id="defaultSettings" type="button">Default settings</button>
+                    <button class="bubble" id="saveSettings" type="button">Save settings</button>
+                    <a class="bubble" href="#home">Home</a>
+                </div>
+                <p id="settingsStatus" role="status" aria-live="polite"></p>
+            </form>
+        </main>
+    </template>
+
+    <template id="view-contact">
+        <main>
+            <div class="title">
+                <div class="home">
+                    <a class="bubble" href="#home">
+                        <h2>Home</h2>
+                    </a>
+                </div>
+                <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+                <div class="dispense">
+                    <a class="bubble" href="#dispense">
+                        <h2>Dispense</h2>
+                    </a>
+                </div>
+            </div>
+            <div class="pageName">
+                <h2>Get in Contact</h2>
+            </div>
+            <div class="bubble contactPanel">
+                <h3>Get in Touch</h3>
+                <p>Use this form to get in touch and learn more about the Narcan Dispenser Kiosk.</p>
+                <hr class="contactDivider">
+                <form class="contactForm" id="contactForm">
+                    <div class="contactFields">
+                        <div>
+                            <label for="name">Name:</label>
+                            <input type="text" id="name" name="name" placeholder="Enter your name">
+                        </div>
+                        <div>
+                            <label for="email">Email:</label>
+                            <input type="email" id="email" name="email" placeholder="Enter your email">
+                        </div>
+                    </div>
+                    <div class="messageField">
+                        <label for="message">Message:</label>
+                        <textarea id="message" name="message" rows="8" placeholder="Write your message"></textarea>
+                    </div>
+                    <button class="bubble contactSubmit" type="submit">Submit</button>
+                </form>
+            </div>
+        </main>
+    </template>
+
+    <template id="view-dispense">
+        <main>
+            <div class="title">
+                <div class="home">
+                    <a class="bubble" href="#home">
+                        <h2>Home</h2>
+                    </a>
+                </div>
+                <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+                <div class="dispense" aria-hidden="true"></div>
+            </div>
+            <div class="pageName">
+                <h2>Dispense Items</h2>
+            </div>
+            <div class="dispenseList" id="dispenseList"></div>
+        </main>
+    </template>
+
+    <template id="view-learn-more">
+        <main>
+            <div class="title">
+                <div class="home">
+                    <a class="bubble" href="#home">
+                        <h2>Home</h2>
+                    </a>
+                </div>
+                <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+                <div class="dispense">
+                    <a class="bubble" href="#dispense">
+                        <h2>Dispense</h2>
+                    </a>
+                </div>
+            </div>
+            <div class="pageName">
+                <h2>Learn More</h2>
+            </div>
+            <div class="learnMoreToolbar">
+                <button class="learnMoreAddPlaceholder" id="toggleLearnMoreSearch" type="button" aria-label="Show search" aria-expanded="false">
+                    <img src="images/magnifier.svg" alt="" aria-hidden="true">
+                </button>
+                <input id="learnMoreSearch" type="search" placeholder="Search dispensables and drugs"
+                    aria-label="Search dispensables and drugs" hidden>
+                <label for="learnMoreSort">Sort by</label>
+                <select id="learnMoreSort">
+                    <option value="name-asc">Name (A–Z)</option>
+                    <option value="name-desc">Name (Z–A)</option>
+                    <option value="category">Category</option>
+                </select>
+            </div>
+            <div class="learnMoreList" id="learnMoreList"></div>
+        </main>
+    </template>
+
+    <template id="view-item">
+        <main>
+            <div class="title">
+                <div class="home">
+                    <a class="bubble" href="#home">
+                        <h2>Home</h2>
+                    </a>
+                </div>
+                <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+                <div class="dispense">
+                    <a class="bubble" href="#dispense">
+                        <h2>Dispense</h2>
+                    </a>
+                </div>
+            </div>
+            <div class="bubble itemInformation">
+                <div class="itemInformationHeader">
+                    <div class="itemTitleGroup">
+                        <a class="itemBack" href="#learn-more" aria-label="Back to Learn More">
+                            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                                <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                                <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                            </svg>
+                        </a>
+                        <h2 id="itemName"></h2>
+                    </div>
+                </div>
+                <div class="itemInformationText">
+                    <p id="itemDescription"></p>
+                </div>
+                <div class="itemImagePlaceholder">
+                    <img id="itemImage" alt="" hidden>
+                </div>
+                <hr class="itemSectionDivider" id="contentDivider" hidden>
+                <div class="itemDispensing" id="itemDispensing"></div>
+                <hr class="itemSectionDivider" id="dispenseDivider" hidden>
+                <section class="itemRelevantPages" id="relatedItemsSection" hidden>
+                    <h3>Relevant Pages</h3>
+                    <div class="relatedInfoList" id="relatedItemsList"></div>
+                </section>
+            </div>
+        </main>
+        <dialog class="imageLightbox" id="itemImageDialog" aria-label="Expanded item image">
+            <button class="imageLightboxClose" id="closeItemImage" type="button" aria-label="Close image">
+                &times;
+            </button>
+            <img id="expandedItemImage" alt="">
+        </dialog>
+    </template>
+
+    <template id="view-dispensing">
+        <main>
+            <div class="title">
+                <div class="home" aria-hidden="true"></div>
+                <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
+                <div class="dispense" aria-hidden="true"></div>
+            </div>
+            <div class="bubble pageName dispensingPanel">
+                <h2>Dispensing <span id="dispensedItemName"></span></h2>
+                <div class="dispensingSpinner" role="status" aria-label="Dispensing"></div>
+                <p>Please wait while your <span id="dispensedItemNameAgain"></span> is dispensed.</p>
+                <button class="bubble dispensingCancel" id="cancelDispensing" type="button">Cancel</button>
+            </div>
+        </main>
+    </template>
+</body>
+</html>

@@ -143,6 +143,7 @@ h3 {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     align-items: center;
+    column-gap: clamp(0.75rem, 2vw, 1.5rem);
     padding-inline: 15%;
     box-sizing: border-box;
 }
@@ -157,6 +158,24 @@ h3 {
     max-width: 100%;
     height: clamp(4.5rem, 10vw, 7rem);
     object-fit: contain;
+}
+
+.title .home .bubble,
+.title .dispense .bubble {
+    width: 9.5rem;
+    min-height: 3.5rem;
+    padding: 0.5rem 0.75rem;
+    box-sizing: border-box;
+}
+
+.title .home .bubble h2,
+.title .dispense .bubble h2 {
+    margin: 0;
+    text-align: center;
+}
+
+.homePageTitle {
+    padding-bottom: 2rem;
 }
 
 .pageName {
@@ -890,6 +909,11 @@ h3 {
         padding-inline: 1rem;
     }
 
+    .title .home .bubble,
+    .title .dispense .bubble {
+        width: 7rem;
+    }
+
     .itemInformation {
         grid-template-columns: 1fr;
     }
@@ -930,6 +954,42 @@ h3 {
 
 .adminName {
     margin: -1rem 0 0;
+}
+
+.adminButtonRows {
+    display: flex;
+    width: min(90vw, 42rem);
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.adminButtonRow {
+    display: grid;
+    width: 100%;
+    gap: 1rem;
+}
+
+.adminProjectButtons {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.adminToolsButtons {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.adminButtonRow .bubble {
+    width: 100%;
+    min-width: 0;
+    min-height: 4rem;
+    padding: 1rem 0.75rem;
+    box-sizing: border-box;
+    text-align: center;
+}
+
+@media (max-width: 600px) {
+    .adminButtonRow {
+        grid-template-columns: 1fr;
+    }
 }
 
 .entryButtons {
@@ -1069,4 +1129,31 @@ h3 {
     min-height: 1.5em;
     margin: 0;
     text-align: center;
+}
+
+/* Single-document kiosk app */
+.dispenseButton > a {
+    width: 100%;
+    height: min(70vh, 28rem);
+    box-sizing: border-box;
+}
+
+#app.pageEntering {
+    animation: kioskPageFade 180ms ease-out;
+}
+
+@keyframes kioskPageFade {
+    from {
+        opacity: 0.7;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #app.pageEntering {
+        animation: none;
+    }
 }
