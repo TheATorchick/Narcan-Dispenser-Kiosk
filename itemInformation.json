@@ -3,7 +3,7 @@
   "Fentanyl": {
     "name": "Fentanyl",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/fentanyl.jpg",
     "description": "Fentanyl is a powerful synthetic opioid used medically to treat severe pain. It is significantly stronger than morphine and can cause respiratory depression, unconsciousness, and death when taken in excessive amounts. Illicit fentanyl is frequently mixed into other drugs without the user's knowledge, increasing the risk of accidental overdose. Naloxone (Narcan) can reverse a fentanyl overdose.",
     "relatedItems": ["Narcan", "Oxycodone", "Fentanyl Test Strips", "Xylazine Test Strips", "Morphine"],
     "dispenses": []
@@ -11,7 +11,7 @@
   "Narcan": {
     "name": "Narcan",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Naloxone.jpg",
     "description": "Narcan is a brand of naloxone, a medication that rapidly reverses an opioid overdose by blocking opioid receptors in the brain. It is administered as a nasal spray and can restore normal breathing in someone experiencing an overdose. Multiple doses may be necessary, especially with potent opioids like fentanyl. Always call emergency services after administering Narcan.",
     "relatedItems": ["Fentanyl", "Heroin", "Oxycodone", "Hydrocodone", "Buprenorphine", "Methadone", "Morphine"],
     "dispenses": ["Narcan"]
@@ -19,7 +19,7 @@
   "Fentanyl Test Strips": {
     "name": "Fentanyl Test Strips",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Fentanyl test strips.jpg",
     "description": "Fentanyl test strips are small testing tools used to detect the presence of fentanyl in a drug sample. They provide a way for individuals to identify potential fentanyl contamination before exposure. A negative result does not guarantee that a substance is safe, as testing has limitations and may not detect every dangerous substance.",
     "relatedItems": ["Fentanyl", "Heroin", "Oxycodone", "Xylazine Test Strips"],
     "dispenses": ["Fentanyl Test Strips"]
@@ -27,7 +27,7 @@
   "Xylazine Test Strips": {
     "name": "Xylazine Test Strips",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Xylazine Test Strips.jpg",
     "description": "Xylazine test strips are used to detect xylazine, a veterinary sedative that is increasingly found mixed with illicit opioids, including fentanyl. Xylazine is not an opioid and does not respond to naloxone. However, Narcan should still be administered when an overdose is suspected because opioids may also be present. Emergency medical attention is necessary.",
     "relatedItems": ["Xylazine", "Fentanyl", "Narcan"],
     "dispenses": ["Xylazine Test Strips"]
@@ -35,7 +35,7 @@
   "Rescue Breathing Face Shield": {
     "name": "Rescue Breathing Face Shield",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Rescue Breathing Face Shield.jpg",
     "description": "A rescue breathing face shield is a protective barrier used when providing rescue breaths to someone who is not breathing normally. Opioid overdoses can cause breathing to slow or stop entirely. A face shield provides a barrier between the person providing assistance and the individual receiving it. It can be used alongside CPR and Narcan administration.",
     "relatedItems": ["Narcan", "Fentanyl", "Emergency Thermal Blanket"],
     "dispenses": ["Rescue Breathing Face Shield"]
@@ -43,7 +43,7 @@
   "Wound Care Kit": {
     "name": "Wound Care Kit",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Wound Care Kit.avif",
     "description": "A basic wound-care kit provides supplies for cleaning and protecting minor wounds. It may include sterile gauze, bandages, cleansing wipes, and other basic first-aid materials. These supplies can help individuals address minor injuries and maintain basic wound hygiene. Serious, infected, or worsening wounds require professional medical attention.",
     "relatedItems": ["Heroin", "Oxycodone", "Xylazine", "Sterile Syringe Kit"],
     "dispenses": ["Wound Care Kit"]
@@ -51,7 +51,7 @@
   "Sterile Syringe Kit": {
     "name": "Sterile Syringe Kit",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Sterile Syringe Kit.jpg",
     "description": "A sterile syringe kit provides clean, unused injection equipment and may include other harm-reduction supplies. Access to sterile equipment helps reduce the spread of bloodborne infections, including HIV and hepatitis C, that can result from sharing injection equipment. These supplies are part of harm-reduction programs designed to reduce health risks.",
     "relatedItems": ["Fentanyl Test Strips", "Wound Care Kit", "Narcan", "Heroin"],
     "dispenses": ["Sterile Syringe Kit"]
@@ -59,7 +59,7 @@
   "Emergency Thermal Blanket": {
     "name": "Emergency Thermal Blanket",
     "category": "Dispensable",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Emergency Thermal Blanket.jpg",
     "description": "An emergency thermal blanket is a lightweight, compact blanket designed to help retain body heat and prevent heat loss. It can be useful when assisting someone experiencing a medical emergency, particularly outdoors or in cold environments. It is a basic emergency supply that can complement other first-aid and overdose-response equipment.",
     "relatedItems": ["Narcan", "Rescue Breathing Face Shield", "Wound Care Kit"],
     "dispenses": ["Emergency Thermal Blanket"]
@@ -67,7 +67,7 @@
   "Heroin": {
     "name": "Heroin",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Herion.jpeg",
     "description": "Heroin is an illegal opioid made from morphine. It produces intense feelings of euphoria and relaxation by interacting with opioid receptors in the brain. Heroin can slow breathing and heart rate, potentially leading to a fatal overdose. Illicit heroin may also contain fentanyl or other dangerous substances. Naloxone can reverse an opioid overdose involving heroin.",
     "relatedItems": ["Narcan", "Fentanyl", "Fentanyl Test Strips", "Oxycodone", "Morphine", "Buprenorphine", "Methadone"],
     "dispenses": []
@@ -75,7 +75,7 @@
   "Oxycodone": {
     "name": "Oxycodone",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Oxycodone.jpg",
     "description": "Oxycodone is a prescription opioid medication used to treat moderate to severe pain. It works by binding to opioid receptors in the brain and nervous system, reducing the perception of pain. Misuse or excessive doses can cause dependence, respiratory depression, and potentially fatal overdose. Counterfeit pills sold as oxycodone may contain fentanyl.",
     "relatedItems": ["Narcan", "Fentanyl", "Heroin", "Hydrocodone", "Morphine", "Buprenorphine", "Methadone"],
     "dispenses": []
@@ -83,7 +83,7 @@
   "Hydrocodone": {
     "name": "Hydrocodone",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Hydrocodone.avif",
     "description": "Hydrocodone is a prescription opioid used to treat moderate to severe pain. It is commonly prescribed in combination with acetaminophen. Like other opioids, it works by binding to receptors in the brain and nervous system. Misuse can lead to dependence, slowed breathing, and overdose. Naloxone can reverse an overdose involving hydrocodone.",
     "relatedItems": ["Narcan", "Oxycodone", "Fentanyl", "Morphine"],
     "dispenses": []
@@ -91,7 +91,7 @@
   "Xylazine": {
     "name": "Xylazine",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Xylazine.jpg",
     "description": "Xylazine is a non-opioid veterinary sedative that is not approved for human use. It has increasingly been found mixed with illicit fentanyl and other street drugs. Exposure can cause extreme sedation, slowed breathing, dangerously low blood pressure, and serious skin wounds. Naloxone does not reverse xylazine itself, but should still be administered if an opioid overdose is suspected.",
     "relatedItems": ["Fentanyl", "Narcan", "Xylazine Test Strips", "Wound Care Kit"],
     "dispenses": []
@@ -99,7 +99,7 @@
   "Buprenorphine": {
     "name": "Buprenorphine",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Buprenorphine.png",
     "description": "Buprenorphine is a prescription medication used to treat opioid use disorder. It is a partial opioid agonist, meaning it activates opioid receptors less strongly than drugs like heroin or fentanyl. It helps reduce withdrawal symptoms and cravings without producing the same level of effects as full opioid agonists. It is commonly used as part of medication-assisted treatment and long-term recovery programs.",
     "relatedItems": ["Methadone", "Naltrexone", "Heroin", "Fentanyl", "Narcan", "Oxycodone"],
     "dispenses": []
@@ -107,7 +107,7 @@
   "Methadone": {
     "name": "Methadone",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Methadone.jpg",
     "description": "Methadone is a long-acting prescription opioid medication used to treat opioid use disorder and manage severe pain. When used in supervised treatment programs, it helps reduce withdrawal symptoms and cravings by activating opioid receptors in a controlled manner. It can help individuals stabilize their lives and participate in long-term recovery. Treatment requires medical supervision because methadone can also cause respiratory depression and overdose.",
     "relatedItems": ["Buprenorphine", "Naltrexone", "Heroin", "Fentanyl", "Narcan", "Oxycodone"],
     "dispenses": []
@@ -115,7 +115,7 @@
   "Morphine": {
     "name": "Morphine",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Morphine.jpg",
     "description": "Morphine is a prescription opioid medication commonly used to treat moderate to severe pain. It is derived from the opium poppy and works by binding to opioid receptors in the brain and nervous system. Morphine is also the substance from which heroin is derived. Like other opioids, excessive doses can cause respiratory depression, dependence, and potentially fatal overdose. Naloxone can reverse an overdose involving morphine.",
     "relatedItems": ["Heroin", "Fentanyl", "Oxycodone", "Hydrocodone", "Narcan", "Buprenorphine"],
     "dispenses": []
@@ -123,7 +123,7 @@
   "Naltrexone": {
     "name": "Naltrexone",
     "category": "Drug",
-    "imagePath": "images/replace-with-image.jpg",
+    "imagePath": "images/Naltrexone.jpg",
     "description": "Naltrexone is a prescription medication used to treat opioid use disorder and alcohol use disorder. It works by blocking opioid receptors in the brain, preventing opioids from producing their usual effects. Unlike buprenorphine and methadone, naltrexone is not an opioid and does not produce opioid effects. It is available as a daily oral medication or a long-acting monthly injection. Individuals must be fully withdrawn from opioids before starting treatment to avoid precipitated withdrawal.",
     "relatedItems": ["Buprenorphine", "Methadone", "Heroin", "Fentanyl", "Oxycodone"],
     "dispenses": []
