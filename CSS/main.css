@@ -483,6 +483,47 @@ h3 {
     background-color: transparent;
 }
 
+.itemImagePlaceholder img:not([hidden]) {
+    cursor: zoom-in;
+}
+
+.imageLightbox {
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    padding: 3rem 1rem 1rem;
+    overflow: auto;
+    border: 2px solid var(--color-accent);
+    border-radius: 1rem;
+    background: var(--color-background);
+}
+
+.imageLightbox::backdrop {
+    background: rgb(0 0 0 / 70%);
+}
+
+.imageLightbox > img {
+    display: block;
+    max-width: min(80vw, 70rem);
+    max-height: 78vh;
+    object-fit: contain;
+}
+
+.imageLightboxClose {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 2px solid var(--color-accent);
+    border-radius: 50%;
+    color: var(--color-text);
+    background: var(--color-background);
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
 .itemRelevantPages {
     grid-column: 1 / -1;
     min-width: 0;
