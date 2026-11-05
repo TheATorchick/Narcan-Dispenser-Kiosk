@@ -19,7 +19,7 @@
   "Fentanyl Test Strips": {
     "name": "Fentanyl Test Strips",
     "category": "Dispensable",
-    "imagePath": "images/Fentanyl test strips.jpg",
+    "imagePath": "images/Fentanyl Test Strips.png",
     "description": "Fentanyl test strips are small testing tools used to detect the presence of fentanyl in a drug sample. They provide a way for individuals to identify potential fentanyl contamination before exposure. A negative result does not guarantee that a substance is safe, as testing has limitations and may not detect every dangerous substance.",
     "relatedItems": ["Fentanyl", "Heroin", "Oxycodone", "Xylazine Test Strips"],
     "dispenses": ["Fentanyl Test Strips"]
@@ -27,7 +27,7 @@
   "Xylazine Test Strips": {
     "name": "Xylazine Test Strips",
     "category": "Dispensable",
-    "imagePath": "images/Xylazine Test Strips.jpg",
+    "imagePath": "images/Xylazine Test Strips.png",
     "description": "Xylazine test strips are used to detect xylazine, a veterinary sedative that is increasingly found mixed with illicit opioids, including fentanyl. Xylazine is not an opioid and does not respond to naloxone. However, Narcan should still be administered when an overdose is suspected because opioids may also be present. Emergency medical attention is necessary.",
     "relatedItems": ["Xylazine", "Fentanyl", "Narcan"],
     "dispenses": ["Xylazine Test Strips"]
@@ -35,7 +35,7 @@
   "Rescue Breathing Face Shield": {
     "name": "Rescue Breathing Face Shield",
     "category": "Dispensable",
-    "imagePath": "images/Rescue Breathing Face Shield.jpg",
+    "imagePath": "images/Rescue Breathing Face Shield.png",
     "description": "A rescue breathing face shield is a protective barrier used when providing rescue breaths to someone who is not breathing normally. Opioid overdoses can cause breathing to slow or stop entirely. A face shield provides a barrier between the person providing assistance and the individual receiving it. It can be used alongside CPR and Narcan administration.",
     "relatedItems": ["Narcan", "Fentanyl", "Emergency Thermal Blanket"],
     "dispenses": ["Rescue Breathing Face Shield"]
@@ -51,7 +51,7 @@
   "Sterile Syringe Kit": {
     "name": "Sterile Syringe Kit",
     "category": "Dispensable",
-    "imagePath": "images/Sterile Syringe Kit.jpg",
+    "imagePath": "images/Sterile Syringe Kit.png",
     "description": "A sterile syringe kit provides clean, unused injection equipment and may include other harm-reduction supplies. Access to sterile equipment helps reduce the spread of bloodborne infections, including HIV and hepatitis C, that can result from sharing injection equipment. These supplies are part of harm-reduction programs designed to reduce health risks.",
     "relatedItems": ["Fentanyl Test Strips", "Wound Care Kit", "Narcan", "Heroin"],
     "dispenses": ["Sterile Syringe Kit"]
@@ -59,7 +59,7 @@
   "Emergency Thermal Blanket": {
     "name": "Emergency Thermal Blanket",
     "category": "Dispensable",
-    "imagePath": "images/Emergency Thermal Blanket.jpg",
+    "imagePath": "images/Emergency Thermal Blanket.png",
     "description": "An emergency thermal blanket is a lightweight, compact blanket designed to help retain body heat and prevent heat loss. It can be useful when assisting someone experiencing a medical emergency, particularly outdoors or in cold environments. It is a basic emergency supply that can complement other first-aid and overdose-response equipment.",
     "relatedItems": ["Narcan", "Rescue Breathing Face Shield", "Wound Care Kit"],
     "dispenses": ["Emergency Thermal Blanket"]
@@ -91,7 +91,7 @@
   "Xylazine": {
     "name": "Xylazine",
     "category": "Drug",
-    "imagePath": "images/Xylazine.jpg",
+    "imagePath": "images/Xylazine.png",
     "description": "Xylazine is a non-opioid veterinary sedative that is not approved for human use. It has increasingly been found mixed with illicit fentanyl and other street drugs. Exposure can cause extreme sedation, slowed breathing, dangerously low blood pressure, and serious skin wounds. Naloxone does not reverse xylazine itself, but should still be administered if an opioid overdose is suspected.",
     "relatedItems": ["Fentanyl", "Narcan", "Xylazine Test Strips", "Wound Care Kit"],
     "dispenses": []
@@ -123,7 +123,7 @@
   "Naltrexone": {
     "name": "Naltrexone",
     "category": "Drug",
-    "imagePath": "images/Naltrexone.jpg",
+    "imagePath": "images/Naltrexone.png",
     "description": "Naltrexone is a prescription medication used to treat opioid use disorder and alcohol use disorder. It works by blocking opioid receptors in the brain, preventing opioids from producing their usual effects. Unlike buprenorphine and methadone, naltrexone is not an opioid and does not produce opioid effects. It is available as a daily oral medication or a long-acting monthly injection. Individuals must be fully withdrawn from opioids before starting treatment to avoid precipitated withdrawal.",
     "relatedItems": ["Buprenorphine", "Methadone", "Heroin", "Fentanyl", "Oxycodone"],
     "dispenses": []

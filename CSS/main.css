@@ -397,6 +397,10 @@ h3 {
     display: none;
 }
 
+.learnMoreImagePlaceholder:has(img:not([hidden])) {
+    background-color: transparent;
+}
+
 /*Dispensable Information*/
 .itemInformation {
     display: grid;
@@ -475,6 +479,10 @@ h3 {
     display: none;
 }
 
+.itemImagePlaceholder:has(img:not([hidden])) {
+    background-color: transparent;
+}
+
 .itemRelevantPages {
     grid-column: 1 / -1;
     min-width: 0;
@@ -541,6 +549,10 @@ h3 {
 
 .relatedInfoImage img[hidden] {
     display: none;
+}
+
+.relatedInfoImage:has(img:not([hidden])) {
+    background-color: transparent;
 }
 
 .itemDispensing {
