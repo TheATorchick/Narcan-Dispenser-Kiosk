@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Background Test | Narcan Dispenser Kiosk</title>
+    <link href="CSS/main.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://use.typekit.net/lzn5wlh.css">
+    <script src="scripts/scripts.js" defer></script>
+</head>
+<body>
+    <a class="itemBack backgroundBack" href="admin.html" aria-label="Back to Admin">
+        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+            <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+        </svg>
+    </a>
+    <div class="backgroundControls" hidden>
+        <button class="bubble backgroundPanelToggle" id="hideBackgroundSettings" type="button">Hide settings</button>
+        <div class="backgroundSetting">
+            <label for="magnifierCount">Images <output id="magnifierCountValue" for="magnifierCount">40</output></label>
+            <input id="magnifierCount" type="range" min="1" max="1000" value="40">
+        </div>
+        <div class="backgroundSetting">
+            <label for="magnifierSpeed">Fall speed <output id="magnifierSpeedValue" for="magnifierSpeed">1×</output></label>
+            <input id="magnifierSpeed" type="range" min="0.5" max="10" step="0.5" value="1">
+        </div>
+        <div class="backgroundSetting">
+            <label for="magnifierSize">Magnifier size <output id="magnifierSizeValue" for="magnifierSize">2.5rem</output></label>
+            <input id="magnifierSize" type="range" min="1" max="8" step="0.5" value="2.5">
+        </div>
+        <div class="backgroundSetting">
+            <label for="magnifierOpacity">Opacity <output id="magnifierOpacityValue" for="magnifierOpacity">14%</output></label>
+            <input id="magnifierOpacity" type="range" min="5" max="100" value="14">
+        </div>
+        <button class="bubble" id="backgroundDefaults" type="button">Default</button>
+    </div>
+    <button class="bubble backgroundPanelShow" id="showBackgroundSettings" type="button">Show settings</button>
+</body>
+</html>

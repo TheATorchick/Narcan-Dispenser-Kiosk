@@ -13,12 +13,14 @@
     <main>
         <div class="title">
             <div class="home" aria-hidden="true"></div>
-            <h1>Narcan Dispenser Kiosk</h1>
+            <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
             <div class="dispense" aria-hidden="true"></div>
         </div>
-        <div class="pageName">
+        <div class="bubble pageName dispensingPanel">
             <h2>Dispensing <span data-dispensed-item></span></h2>
+            <div class="dispensingSpinner" role="status" aria-label="Dispensing"></div>
             <p>Please wait while your <span data-dispensed-item></span> is dispensed.</p>
+            <a class="bubble dispensingCancel" href="dispense.html">Cancel</a>
         </div>
     </main>
 
@@ -50,15 +52,35 @@
             }
         }
 
+        let dispensingTimer;
+        let confirmationTimer;
+        const dispensingPanel = document.querySelector(".dispensingPanel");
+        document.querySelector(".dispensingCancel").addEventListener("click", (event) => {
+            event.preventDefault();
+            window.clearTimeout(dispensingTimer);
+            window.clearTimeout(confirmationTimer);
+            dispensingPanel.classList.add("is-canceling");
+            requestAnimationFrame(() => {
+                requestAnimationFrame(() => {
+                    window.setTimeout(() => {
+                        window.location.href = "dispense.html";
+                    }, 250);
+                });
+            });
+        });
+
         getDispensedItem().then((item) => {
             document.querySelectorAll("[data-dispensed-item]").forEach((element) => {
                 element.textContent = item;
             });
             document.title = `${item} Dispensed`;
 
-            window.setTimeout(() => {
-                alert(`${item} has been dispensed. Thank you for using the kiosk`);
-                window.location.href = "home.html";
+            dispensingTimer = window.setTimeout(() => {
+                document.querySelector(".dispensingSpinner")?.remove();
+                confirmationTimer = window.setTimeout(() => {
+                    alert(`${item} has been dispensed. Thank you for using the kiosk`);
+                    window.location.href = "home.html";
+                }, 150);
             }, 4000);
         });
     </script>

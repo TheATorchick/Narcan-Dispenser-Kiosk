@@ -16,11 +16,11 @@
                     <h2>Home</h2>
                 </button>
             </div>
-            <h1>Narcan Dispenser Kiosk</h1>
+            <img class="siteLogo" src="images/Logo.svg" alt="Narcan Dispenser Kiosk">
             <div class="dispense" aria-hidden="true"></div>
         </div>
         <div class="pageName">
-            <h2>Dispense Page</h2>
+            <h2>Dispense Items</h2>
         </div>
         <div class="dispenseList" id="dispenseList"></div>
     </main>
@@ -47,6 +47,7 @@
                     const learnMoreHeading = document.createElement("h3");
                     const dispenseButton = document.createElement("button");
                     const dispenseHeading = document.createElement("h3");
+                    const dispenseImage = document.createElement("img");
 
                     row.className = "dispenseRow";
                     learnMoreButton.className = "bubble learnMoreItemButton";
@@ -58,8 +59,21 @@
                     dispenseButton.className = "bubble dispenseItemButton";
                     dispenseButton.type = "button";
                     dispenseButton.dataset.item = name;
+                    dispenseImage.className = "dispenseItemImage";
+                    dispenseImage.alt = "";
+                    if (item.imagePath) {
+                        dispenseImage.hidden = true;
+                        dispenseImage.addEventListener("load", () => {
+                            dispenseImage.hidden = false;
+                        }, { once: true });
+                        dispenseImage.src = item.imagePath;
+                    }
                     dispenseHeading.textContent = `Dispense ${name}`;
-                    dispenseButton.appendChild(dispenseHeading);
+                    if (item.imagePath) {
+                        dispenseButton.append(dispenseImage, dispenseHeading);
+                    } else {
+                        dispenseButton.appendChild(dispenseHeading);
+                    }
 
                     row.append(learnMoreButton, dispenseButton);
                     dispenseList.appendChild(row);
