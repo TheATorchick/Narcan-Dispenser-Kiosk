@@ -26,6 +26,13 @@ fallingBackground.setAttribute("aria-hidden", "true");
 let magnifierSpeed = 1;
 let magnifierBaseSize = 2.5;
 let magnifierOpacity = 14;
+const fallingImageSources = [
+  "images/SVG/Narcan.svg",
+  "images/SVG/Pill%201.svg",
+  "images/SVG/Pill%202.svg",
+  "images/SVG/Syringe.svg",
+  "images/SVG/Test%20Strip.svg"
+];
 
 function applyMagnifierSettings(magnifier) {
   const size = magnifierBaseSize * Number(magnifier.dataset.sizeFactor);
@@ -37,7 +44,7 @@ function applyMagnifierSettings(magnifier) {
 
 function createFallingMagnifier() {
   const magnifier = document.createElement("img");
-  magnifier.src = "images/magnifier.svg";
+  magnifier.src = fallingImageSources[Math.floor(Math.random() * fallingImageSources.length)];
   magnifier.alt = "";
   magnifier.className = "fallingMagnifier";
   magnifier.dataset.sizeFactor = 0.6 + Math.random() * 0.8;
@@ -151,6 +158,7 @@ if (backgroundControls && hideBackgroundSettings && showBackgroundSettings) {
 fallingBackground.addEventListener("animationiteration", (event) => {
   if (event.target.classList.contains("fallingMagnifier")) {
     event.target.style.setProperty("--fall-left", `${Math.random() * 100}%`);
+    event.target.src = fallingImageSources[Math.floor(Math.random() * fallingImageSources.length)];
   }
 });
 

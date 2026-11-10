@@ -16,6 +16,13 @@ let confirmationTimer;
 let magnifierSpeed = 1;
 let magnifierBaseSize = 2.5;
 let magnifierOpacity = 14;
+const fallingImageSources = [
+  "images/SVG/Narcan.svg",
+  "images/SVG/Pill%201.svg",
+  "images/SVG/Pill%202.svg",
+  "images/SVG/Syringe.svg",
+  "images/SVG/Test%20Strip.svg"
+];
 
 function updateReducedMotion() {
   document.documentElement.classList.toggle(
@@ -69,7 +76,7 @@ function applyMagnifierSettings(image) {
 
 function addFallingMagnifier() {
   const image = document.createElement("img");
-  image.src = "images/magnifier.svg";
+  image.src = fallingImageSources[Math.floor(Math.random() * fallingImageSources.length)];
   image.alt = "";
   image.className = "fallingMagnifier";
   image.dataset.sizeFactor = 0.6 + Math.random() * 0.8;
@@ -92,6 +99,7 @@ function setMagnifierCount(count) {
 fallingBackground.addEventListener("animationiteration", (event) => {
   if (event.target.classList.contains("fallingMagnifier")) {
     event.target.style.setProperty("--fall-left", `${Math.random() * 100}%`);
+    event.target.src = fallingImageSources[Math.floor(Math.random() * fallingImageSources.length)];
   }
 });
 document.body.prepend(fallingBackground);
