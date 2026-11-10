@@ -475,7 +475,8 @@ function renderSettings() {
   app.querySelector("#defaultSettings").addEventListener("click", () => {
     fillSettings(defaultSiteSettings);
     previewSettings();
-    status.textContent = "Default settings restored. Save settings to keep them.";
+    localStorage.setItem("kioskSettings", JSON.stringify(defaultSiteSettings));
+    window.location.href = "admin.html";
   });
   app.querySelector("#saveSettings").addEventListener("click", () => {
     const invalid = [...app.querySelectorAll(".hexInput")].find((input) => !input.checkValidity());

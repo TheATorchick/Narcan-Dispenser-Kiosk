@@ -44,7 +44,7 @@
             <div class="settingsActions">
                 <button class="bubble" id="defaultSettings" type="button">Default settings</button>
                 <button class="bubble" id="saveSettings" type="button">Save settings</button>
-                <a class="bubble" href="home.html">Home</a>
+                <a class="bubble" href="admin.html">Admin</a>
             </div>
             <p id="settingsStatus" role="status" aria-live="polite"></p>
         </form>
@@ -73,7 +73,8 @@
         document.querySelector("#defaultSettings").addEventListener("click", () => {
             renderSettings(defaultSettings);
             settingsForm.dispatchEvent(new Event("input", { bubbles: true }));
-            settingsStatus.textContent = "Default settings restored. Save settings to keep them.";
+            localStorage.setItem("kioskSettings", JSON.stringify(defaultSettings));
+            window.location.href = "admin.html";
         });
 
         const colorKeys = ["mainColor", "backgroundColor", "accentColor", "textColor"];

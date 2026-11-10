@@ -156,7 +156,9 @@ h3 {
     justify-self: center;
     width: auto;
     max-width: 100%;
-    height: clamp(4.5rem, 10vw, 7rem);
+    /* The refreshed SVG has a taller viewBox, so scale it up to keep its
+       visible mark close to the previous logo's size. */
+    height: clamp(7rem, 15vw, 10.5rem);
     object-fit: contain;
 }
 
@@ -948,7 +950,7 @@ h3 {
 .entryPage .siteLogo {
     width: auto;
     max-width: min(80vw, 24rem);
-    height: clamp(5rem, 12vw, 9rem);
+    height: clamp(7.75rem, 17.5vw, 13rem);
     object-fit: contain;
 }
 
