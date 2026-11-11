@@ -1419,3 +1419,117 @@ h3 {
     box-sizing: border-box;
 }
 
+/* iPhone and iPad layout support */
+@supports (padding: max(0px)) {
+    body {
+        padding-left: max(0px, env(safe-area-inset-left));
+        padding-right: max(0px, env(safe-area-inset-right));
+    }
+
+    .entryFooter {
+        padding-bottom: max(0px, env(safe-area-inset-bottom));
+    }
+}
+
+@media (max-width: 768px) {
+    .title {
+        padding-inline: clamp(0.75rem, 4vw, 2rem);
+        column-gap: 0.75rem;
+    }
+
+    .title .siteLogo,
+    .entryPage .siteLogo {
+        height: clamp(5rem, 17vw, 8rem);
+    }
+
+    .bubble,
+    button,
+    input,
+    select,
+    textarea {
+        -webkit-tap-highlight-color: transparent;
+    }
+
+    .title .home .bubble,
+    .title .dispense .bubble {
+        min-height: 3rem;
+    }
+
+    .itemInformation {
+        width: min(94vw, 50rem);
+        padding: 1.25rem;
+    }
+
+    .itemImagePlaceholder {
+        min-height: 14rem;
+    }
+}
+
+@media (max-width: 600px) {
+    html {
+        -webkit-text-size-adjust: 100%;
+        text-size-adjust: 100%;
+    }
+
+    .title {
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+        padding-top: max(0.75rem, env(safe-area-inset-top));
+    }
+
+    .title .home .bubble,
+    .title .dispense .bubble {
+        width: auto;
+        min-width: 4rem;
+        padding-inline: 0.5rem;
+    }
+
+    .otherButtons {
+        width: min(90vw, 32rem);
+        gap: 0.75rem;
+    }
+
+    .otherButtons > .bubble {
+        min-height: 4rem;
+        height: auto;
+        padding: 0.75rem 0.5rem;
+    }
+
+    .dispenseButton,
+    .otherButtons {
+        width: min(90vw, 32rem);
+    }
+
+    .itemInformation {
+        grid-template-columns: minmax(0, 1fr);
+        max-height: 72dvh;
+        overflow-y: auto;
+    }
+
+    .itemImagePlaceholder {
+        min-height: min(45vh, 20rem);
+    }
+
+    .contactFields {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    input,
+    select,
+    textarea {
+        font-size: 16px;
+    }
+
+    .dispensingOverlay .dispensingPanel {
+        width: 100%;
+        padding: 1.5rem 1rem max(1.5rem, env(safe-area-inset-bottom));
+    }
+}
+
+@media (hover: none) and (pointer: coarse) {
+    .bubble,
+    button,
+    .itemImagePlaceholder img:not([hidden]) {
+        touch-action: manipulation;
+    }
+}
+
