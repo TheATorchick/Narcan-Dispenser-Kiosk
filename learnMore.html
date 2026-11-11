@@ -41,6 +41,43 @@
         <div class="learnMoreList" id="learnMoreList"></div>
     </main>
 
+    <dialog class="itemSheetDialog" id="learnMoreItemDialog" aria-label="Item information">
+        <div class="bubble itemInformation itemSheetBubble">
+            <div class="itemInformationHeader">
+                <div class="itemTitleGroup">
+                    <button class="itemBack itemSheetClose" id="closeLearnMoreItem" type="button" aria-label="Close item information">
+                        <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                            <line x1="5" y1="5" x2="19" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                            <line x1="19" y1="5" x2="5" y2="19" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" />
+                        </svg>
+                    </button>
+                    <h2 id="learnMoreItemName"></h2>
+                </div>
+            </div>
+            <div class="itemInformationText"><p id="learnMoreItemDescription"></p></div>
+            <div class="itemImagePlaceholder"><img id="learnMoreItemImage" alt="" hidden></div>
+            <hr class="itemSectionDivider" id="learnMoreContentDivider" hidden>
+            <div class="itemDispensing" id="learnMoreItemDispensing"></div>
+            <hr class="itemSectionDivider" id="learnMoreDispenseDivider" hidden>
+            <section class="itemRelevantPages" id="learnMoreRelatedSection" hidden>
+                <h3>Relevant Pages</h3>
+                <div class="relatedInfoList" id="learnMoreRelatedList"></div>
+            </section>
+        </div>
+    </dialog>
+    <dialog class="imageLightbox" id="learnMoreImageLightbox" aria-label="Expanded item image">
+        <button class="imageLightboxClose" id="closeLearnMoreImageLightbox" type="button" aria-label="Close image">&times;</button>
+        <img id="expandedLearnMoreImage" alt="">
+    </dialog>
+    <dialog class="dispensingOverlay" id="dispensingOverlay" aria-label="Dispensing item">
+        <div class="bubble pageName dispensingPanel">
+            <h2>Dispensing <span data-dispensed-item></span></h2>
+            <div class="dispensingSpinner" role="status" aria-label="Dispensing"></div>
+            <p>Please wait while your <span data-dispensed-item></span> is dispensed.</p>
+            <button class="bubble dispensingCancel" type="button">Cancel</button>
+        </div>
+    </dialog>
+
     <script>
         const learnMoreList = document.querySelector("#learnMoreList");
         const learnMoreSearch = document.querySelector("#learnMoreSearch");
@@ -56,6 +93,136 @@
             })
             .then((items) => {
                 const itemEntries = Object.entries(items);
+                const itemDialog = document.querySelector("#learnMoreItemDialog");
+                const itemSheet = itemDialog.querySelector(".itemSheetBubble");
+                const itemName = document.querySelector("#learnMoreItemName");
+                const itemDescription = document.querySelector("#learnMoreItemDescription");
+                const itemImage = document.querySelector("#learnMoreItemImage");
+                const imageLightbox = document.querySelector("#learnMoreImageLightbox");
+                const expandedItemImage = document.querySelector("#expandedLearnMoreImage");
+                const itemDispensing = document.querySelector("#learnMoreItemDispensing");
+                const relatedSection = document.querySelector("#learnMoreRelatedSection");
+                const relatedList = document.querySelector("#learnMoreRelatedList");
+                const contentDivider = document.querySelector("#learnMoreContentDivider");
+                const dispenseDivider = document.querySelector("#learnMoreDispenseDivider");
+                let itemCloseTimer;
+                let itemIsClosing = false;
+
+                function closeItemInfo() {
+                    if (!itemDialog.open || itemIsClosing) return;
+                    if (document.documentElement.classList.contains("reduced-motion") || window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+                        itemDialog.close();
+                        return;
+                    }
+
+                    itemIsClosing = true;
+                    itemSheet.classList.add("is-closing");
+                    const finishClosing = (event) => {
+                        if (event && (event.target !== itemSheet || event.animationName !== "itemInfoSheetDrop")) return;
+                        window.clearTimeout(itemCloseTimer);
+                        itemSheet.removeEventListener("animationend", finishClosing);
+                        itemSheet.classList.remove("is-closing");
+                        itemIsClosing = false;
+                        itemDialog.close();
+                    };
+                    itemSheet.addEventListener("animationend", finishClosing);
+                    itemCloseTimer = window.setTimeout(() => finishClosing(), 360);
+                }
+
+                function openItemInfo(itemKey) {
+                    itemIsClosing = false;
+                    window.clearTimeout(itemCloseTimer);
+                    itemSheet.classList.remove("is-closing");
+                    window.scrollTo(0, 0);
+                    const item = items[itemKey];
+                    const displayName = item?.name || itemKey;
+                    itemName.textContent = displayName;
+                    itemDescription.textContent = item?.description || `Information about ${displayName} will go here.`;
+                    itemImage.hidden = true;
+                    itemImage.removeAttribute("src");
+                    itemDispensing.replaceChildren();
+                    relatedList.replaceChildren();
+
+                    if (item?.imagePath) {
+                        itemImage.alt = displayName;
+                        itemImage.onload = () => { itemImage.hidden = false; };
+                        itemImage.onerror = () => { itemImage.hidden = true; };
+                        itemImage.src = item.imagePath;
+                    }
+
+                    (item?.dispenses || []).forEach((dispensedName, index) => {
+                        const button = document.createElement("button");
+                        const heading = document.createElement("h3");
+                        button.className = "bubble dispenseItemButton";
+                        button.type = "button";
+                        button.dataset.item = dispensedName;
+                        button.dataset.sourceItem = itemKey;
+                        button.dataset.dispenseIndex = index;
+                        heading.textContent = `Dispense ${dispensedName}`;
+                        button.appendChild(heading);
+                        itemDispensing.appendChild(button);
+                    });
+
+                    const relatedItems = item?.relatedItems || [];
+                    relatedItems.forEach((relatedKey) => {
+                        const relatedItem = items[relatedKey];
+                        const card = document.createElement("button");
+                        const imageHolder = document.createElement("span");
+                        const heading = document.createElement("h3");
+                        card.className = "bubble relatedInfoCard learnMoreRelatedCard";
+                        card.type = "button";
+                        card.dataset.item = relatedKey;
+                        imageHolder.className = "relatedInfoImage";
+                        heading.textContent = relatedItem?.name || relatedKey;
+                        if (relatedItem?.imagePath) {
+                            const image = document.createElement("img");
+                            image.alt = relatedItem.name || relatedKey;
+                            image.onerror = () => { image.hidden = true; };
+                            imageHolder.appendChild(image);
+                            image.src = relatedItem.imagePath;
+                        }
+                        card.append(imageHolder, heading);
+                        relatedList.appendChild(card);
+                    });
+
+                    relatedSection.hidden = relatedItems.length === 0;
+                    const hasDispensing = itemDispensing.children.length > 0;
+                    const hasRelated = !relatedSection.hidden;
+                    contentDivider.hidden = !(hasDispensing || hasRelated);
+                    dispenseDivider.hidden = !(hasDispensing && hasRelated);
+                    itemSheet.scrollTop = 0;
+                    if (!itemDialog.open) itemDialog.showModal();
+                }
+
+                window.openLearnMoreItem = openItemInfo;
+                document.querySelector("#closeLearnMoreItem").addEventListener("click", closeItemInfo);
+                itemImage.addEventListener("click", () => {
+                    if (itemImage.hidden) return;
+                    expandedItemImage.src = itemImage.src;
+                    expandedItemImage.alt = itemImage.alt;
+                    imageLightbox.showModal();
+                });
+                document.querySelector("#closeLearnMoreImageLightbox").addEventListener("click", () => imageLightbox.close());
+                imageLightbox.addEventListener("click", (event) => {
+                    if (event.target === imageLightbox) imageLightbox.close();
+                });
+                itemDialog.addEventListener("cancel", (event) => {
+                    event.preventDefault();
+                    closeItemInfo();
+                });
+                document.addEventListener("keydown", (event) => {
+                    if (event.key === "Escape" && itemDialog.open) {
+                        event.preventDefault();
+                        closeItemInfo();
+                    }
+                }, true);
+                relatedList.addEventListener("click", (event) => {
+                    const card = event.target.closest(".learnMoreRelatedCard");
+                    if (card) openItemInfo(card.dataset.item);
+                });
+                itemDialog.addEventListener("click", (event) => {
+                    if (event.target === itemDialog) closeItemInfo();
+                });
 
                 function renderCards() {
                     const searchTerm = learnMoreSearch.value.trim().toLowerCase();
@@ -80,13 +247,14 @@
                     });
 
                     learnMoreList.replaceChildren();
-                    visibleItems.forEach(([itemKey, item]) => {
+                    visibleItems.forEach(([itemKey, item], index) => {
                         const card = document.createElement("button");
                         const name = document.createElement("h2");
                         const imagePlaceholder = document.createElement("span");
                         const category = document.createElement("h3");
 
                         card.className = "bubble learnMoreBubble learnMoreItemButton";
+                        card.style.setProperty("--row-fade-delay", `${index * 110}ms`);
                         card.type = "button";
                         card.dataset.item = itemKey;
                         name.textContent = item.name || itemKey;
@@ -128,6 +296,8 @@
                     }
                 });
                 renderCards();
+                const requestedItem = new URLSearchParams(window.location.search).get("item");
+                if (requestedItem) openItemInfo(requestedItem);
             })
             .catch(() => {
                 learnMoreList.textContent = "Information could not be loaded.";

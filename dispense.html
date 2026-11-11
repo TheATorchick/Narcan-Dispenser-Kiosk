@@ -25,6 +25,15 @@
         <div class="dispenseList" id="dispenseList"></div>
     </main>
 
+    <dialog class="dispensingOverlay" id="dispensingOverlay" aria-label="Dispensing item">
+        <div class="bubble pageName dispensingPanel">
+            <h2>Dispensing <span data-dispensed-item></span></h2>
+            <div class="dispensingSpinner" role="status" aria-label="Dispensing"></div>
+            <p>Please wait while your <span data-dispensed-item></span> is dispensed.</p>
+            <button class="bubble dispensingCancel" type="button">Cancel</button>
+        </div>
+    </dialog>
+
     <script>
         const dispenseList = document.querySelector("#dispenseList");
 
@@ -36,11 +45,13 @@
                 return response.json();
             })
             .then((items) => {
+                let rowIndex = 0;
                 Object.entries(items).forEach(([itemKey, item]) => {
                     if (item.category !== "Dispensable") {
                         return;
                     }
 
+                    const index = rowIndex++;
                     const name = item.name || itemKey;
                     const row = document.createElement("div");
                     const learnMoreButton = document.createElement("button");
@@ -50,6 +61,7 @@
                     const dispenseImage = document.createElement("img");
 
                     row.className = "dispenseRow";
+                    row.style.setProperty("--row-fade-delay", `${index * 110}ms`);
                     learnMoreButton.className = "bubble learnMoreItemButton";
                     learnMoreButton.type = "button";
                     learnMoreButton.dataset.item = itemKey;

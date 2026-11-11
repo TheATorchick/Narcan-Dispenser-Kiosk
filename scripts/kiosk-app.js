@@ -1,5 +1,42 @@
 // Single-document kiosk app. Page views are stored in the HTML templates.
 const app = document.querySelector("#app");
+const clickFallReplay = new WeakSet();
+const navigationControlSelector = "a, #home-Button, #dispense-Button, .learnMoreItemButton, .dispenseItemButton, #cancelDispensing, #defaultSettings";
+document.addEventListener("click", (event) => {
+  const control = event.target.closest(navigationControlSelector);
+  if (!control) return;
+  if (clickFallReplay.has(control)) {
+    clickFallReplay.delete(control);
+    return;
+  }
+  if (control.matches("#contact")) return;
+  if (control.disabled || document.documentElement.classList.contains("reduced-motion")) return;
+  const isHomePage = Boolean(app.querySelector(".body"));
+  const isTitleNavigation = control.matches(".title .home .bubble, .title .dispense .bubble");
+  if (!isHomePage && !isTitleNavigation) return;
+
+  event.preventDefault();
+  event.stopImmediatePropagation();
+  const controlsToAnimate = isHomePage
+    ? document.querySelectorAll(navigationControlSelector)
+    : [control];
+  const navigationControls = [...controlsToAnimate]
+    .filter((candidate) => !candidate.hidden && !candidate.closest("[hidden]"));
+  navigationControls.forEach((candidate) => candidate.classList.add("clickFall"));
+  let finished = false;
+  const finish = () => {
+    if (finished) return;
+    finished = true;
+    if (control.isConnected) {
+      clickFallReplay.add(control);
+      control.click();
+    }
+  };
+  control.addEventListener("animationend", (animationEvent) => {
+    if (animationEvent.target === control && animationEvent.animationName === "homeNavigationFadeAway") finish();
+  });
+  window.setTimeout(finish, 800);
+}, true);
 const reducedMotionPreference = window.matchMedia("(prefers-reduced-motion: reduce)");
 const defaultSiteSettings = {
   mainColor: "#0097a5",
@@ -103,7 +140,7 @@ fallingBackground.addEventListener("animationiteration", (event) => {
   }
 });
 document.body.prepend(fallingBackground);
-setMagnifierCount(40);
+setMagnifierCount(80);
 
 const itemsPromise = fetch("itemInformation.json")
   .then((response) => {
@@ -154,6 +191,44 @@ function setDocumentTitle(title) {
 function renderHome() {
   useTemplate("home");
   setDocumentTitle("Home");
+  const dialog = app.querySelector("#homeContactDialog");
+  const sheet = dialog.querySelector(".itemSheetBubble");
+  const form = app.querySelector("#homeContactForm");
+  let closeTimer;
+
+  function closeContact() {
+    if (!dialog.open) return;
+    if (document.documentElement.classList.contains("reduced-motion") || reducedMotionPreference.matches) {
+      dialog.close();
+      return;
+    }
+    sheet.classList.add("is-closing");
+    closeTimer = window.setTimeout(() => {
+      sheet.classList.remove("is-closing");
+      dialog.close();
+    }, 320);
+  }
+
+  app.querySelector("#contact").addEventListener("click", (event) => {
+    event.preventDefault();
+    window.clearTimeout(closeTimer);
+    sheet.classList.remove("is-closing");
+    dialog.showModal();
+  });
+  app.querySelector("#closeHomeContact").addEventListener("click", closeContact);
+  dialog.addEventListener("click", (event) => {
+    if (event.target === dialog) closeContact();
+  });
+  dialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeContact();
+  });
+  form.addEventListener("submit", (event) => {
+    event.preventDefault();
+    window.alert("Form submitted");
+    form.reset();
+    closeContact();
+  });
 }
 
 function renderAdmin() {
@@ -177,10 +252,74 @@ function renderContact() {
   });
 }
 
+let activeInlineDispensing = null;
+
+function setupInlineDispensing(scope) {
+  const overlay = scope.querySelector("#dispensingOverlay");
+  if (!overlay) return;
+  const spinner = overlay.querySelector(".dispensingSpinner");
+  const cancelButton = overlay.querySelector(".dispensingCancel");
+  const names = overlay.querySelectorAll("[data-dispensed-item]");
+  let opener;
+  let closeTimer;
+
+  function closeOverlay() {
+    window.clearTimeout(dispenseTimer);
+    window.clearTimeout(confirmationTimer);
+    if (reducedMotionPreference.matches || document.documentElement.classList.contains("reduced-motion")) {
+      overlay.close();
+      if (opener?.isConnected) opener.focus();
+      return;
+    }
+    overlay.classList.add("is-closing");
+    closeTimer = window.setTimeout(() => {
+      overlay.classList.remove("is-closing");
+      overlay.close();
+      if (opener?.isConnected) opener.focus();
+    }, 280);
+  }
+
+  cancelButton.addEventListener("click", closeOverlay);
+  overlay.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeOverlay();
+  });
+  overlay.addEventListener("click", (event) => {
+    if (event.target === overlay) closeOverlay();
+  });
+
+  activeInlineDispensing = (itemName, trigger) => {
+    window.clearTimeout(dispenseTimer);
+    window.clearTimeout(confirmationTimer);
+    window.clearTimeout(closeTimer);
+    opener = trigger;
+    overlay.classList.remove("is-closing");
+    overlay.classList.remove("is-opening");
+    spinner.hidden = false;
+    cancelButton.hidden = false;
+    names.forEach((node) => { node.textContent = itemName; });
+    if (!overlay.open) overlay.showModal();
+    void overlay.offsetWidth;
+    overlay.classList.add("is-opening");
+    cancelButton.focus();
+
+    dispenseTimer = window.setTimeout(() => {
+      spinner.hidden = true;
+      cancelButton.hidden = true;
+      confirmationTimer = window.setTimeout(() => {
+        window.alert(`${itemName} has been dispensed. Thank you for using the kiosk`);
+        showWelcomeScreen();
+      }, 150);
+    }, 4000);
+  };
+}
+
 function renderDispense() {
   useTemplate("dispense");
   setDocumentTitle("Dispense");
   const list = app.querySelector("#dispenseList");
+  setupInlineDispensing(app);
+
   itemsPromise.then((items) => {
     if (!list.isConnected) return;
     const dispensables = Object.entries(items).filter(([, item]) => item.category === "Dispensable");
@@ -189,7 +328,7 @@ function renderDispense() {
       return;
     }
 
-    dispensables.forEach(([key, item]) => {
+    dispensables.forEach(([key, item], index) => {
       const name = item.name || key;
       const row = document.createElement("div");
       const learnButton = document.createElement("button");
@@ -198,6 +337,7 @@ function renderDispense() {
       const dispenseHeading = document.createElement("h3");
 
       row.className = "dispenseRow";
+      row.style.setProperty("--row-fade-delay", `${index * 110}ms`);
       learnButton.className = "bubble learnMoreItemButton";
       learnButton.type = "button";
       learnButton.dataset.item = key;
@@ -224,13 +364,150 @@ function renderDispense() {
   });
 }
 
-function renderLearnMore() {
+function renderLearnMore(params = new URLSearchParams()) {
   useTemplate("learn-more");
   setDocumentTitle("Learn More");
+  setupInlineDispensing(app);
   const list = app.querySelector("#learnMoreList");
   const search = app.querySelector("#learnMoreSearch");
   const sort = app.querySelector("#learnMoreSort");
   const toggle = app.querySelector("#toggleLearnMoreSearch");
+  const itemDialog = app.querySelector("#learnMoreItemDialog");
+  const itemSheet = itemDialog.querySelector(".itemSheetBubble");
+  const itemName = app.querySelector("#learnMoreItemName");
+  const itemDescription = app.querySelector("#learnMoreItemDescription");
+  const itemImage = app.querySelector("#learnMoreItemImage");
+  const imageLightbox = app.querySelector("#learnMoreImageLightbox");
+  const expandedItemImage = app.querySelector("#expandedLearnMoreImage");
+  const itemDispensing = app.querySelector("#learnMoreItemDispensing");
+  const relatedSection = app.querySelector("#learnMoreRelatedSection");
+  const relatedList = app.querySelector("#learnMoreRelatedList");
+  const contentDivider = app.querySelector("#learnMoreContentDivider");
+  const dispenseDivider = app.querySelector("#learnMoreDispenseDivider");
+  let itemCloseTimer;
+  let itemIsClosing = false;
+
+  function closeItemInfo() {
+    if (!itemDialog.open || itemIsClosing) return;
+    if (document.documentElement.classList.contains("reduced-motion") || reducedMotionPreference.matches) {
+      itemDialog.close();
+      return;
+    }
+
+    itemIsClosing = true;
+    itemSheet.classList.add("is-closing");
+    const finishClosing = (event) => {
+      if (event && (event.target !== itemSheet || event.animationName !== "itemInfoSheetDrop")) return;
+      window.clearTimeout(itemCloseTimer);
+      itemSheet.removeEventListener("animationend", finishClosing);
+      itemSheet.classList.remove("is-closing");
+      itemIsClosing = false;
+      itemDialog.close();
+    };
+    itemSheet.addEventListener("animationend", finishClosing);
+    itemCloseTimer = window.setTimeout(() => finishClosing(), 360);
+  }
+
+  function openItemInfo(itemKey) {
+    itemIsClosing = false;
+    window.clearTimeout(itemCloseTimer);
+    itemSheet.classList.remove("is-closing");
+    window.scrollTo(0, 0);
+    const item = currentItems[itemKey];
+    const displayName = item?.name || itemKey;
+    itemName.textContent = displayName;
+    itemDescription.textContent = item?.description || `Information about ${displayName} will go here.`;
+    itemImage.hidden = true;
+    itemImage.removeAttribute("src");
+    itemDispensing.replaceChildren();
+    relatedList.replaceChildren();
+
+    if (item?.imagePath) {
+      itemImage.alt = displayName;
+      itemImage.onload = () => { itemImage.hidden = false; };
+      itemImage.onerror = () => { itemImage.hidden = true; };
+      itemImage.src = item.imagePath;
+    }
+
+    (item?.dispenses || []).forEach((dispensedName, index) => {
+      const button = document.createElement("button");
+      const heading = document.createElement("h3");
+      button.className = "bubble dispenseItemButton";
+      button.type = "button";
+      button.dataset.item = dispensedName;
+      button.dataset.sourceItem = itemKey;
+      button.dataset.dispenseIndex = index;
+      heading.textContent = `Dispense ${dispensedName}`;
+      button.appendChild(heading);
+      itemDispensing.appendChild(button);
+    });
+
+    const relatedItems = item?.relatedItems || [];
+    relatedItems.forEach((relatedKey) => {
+      const relatedItem = currentItems[relatedKey];
+      const card = document.createElement("button");
+      const imageHolder = document.createElement("span");
+      const heading = document.createElement("h3");
+      card.className = "bubble relatedInfoCard learnMoreRelatedCard";
+      card.type = "button";
+      card.dataset.item = relatedKey;
+      imageHolder.className = "relatedInfoImage";
+      heading.textContent = relatedItem?.name || relatedKey;
+      if (relatedItem?.imagePath) {
+        const relatedImage = document.createElement("img");
+        relatedImage.alt = relatedItem.name || relatedKey;
+        relatedImage.onerror = () => { relatedImage.hidden = true; };
+        imageHolder.appendChild(relatedImage);
+        relatedImage.src = relatedItem.imagePath;
+      }
+      card.append(imageHolder, heading);
+      relatedList.appendChild(card);
+    });
+
+    relatedSection.hidden = relatedItems.length === 0;
+    const hasDispensing = itemDispensing.children.length > 0;
+    const hasRelated = !relatedSection.hidden;
+    contentDivider.hidden = !(hasDispensing || hasRelated);
+    dispenseDivider.hidden = !(hasDispensing && hasRelated);
+    itemSheet.scrollTop = 0;
+    if (!itemDialog.open) itemDialog.showModal();
+  }
+
+  app.querySelector("#closeLearnMoreItem").addEventListener("click", closeItemInfo);
+  itemImage.addEventListener("click", () => {
+    if (itemImage.hidden) return;
+    expandedItemImage.src = itemImage.src;
+    expandedItemImage.alt = itemImage.alt;
+    imageLightbox.showModal();
+  });
+  app.querySelector("#closeLearnMoreImageLightbox").addEventListener("click", () => imageLightbox.close());
+  imageLightbox.addEventListener("click", (event) => {
+    if (event.target === imageLightbox) imageLightbox.close();
+  });
+  itemDialog.addEventListener("cancel", (event) => {
+    event.preventDefault();
+    closeItemInfo();
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && itemDialog.open) {
+      event.preventDefault();
+      closeItemInfo();
+    }
+  }, true);
+  list.addEventListener("click", (event) => {
+    const card = event.target.closest(".learnMoreItemButton");
+    if (card) {
+      event.stopPropagation();
+      openItemInfo(card.dataset.item);
+    }
+  });
+  relatedList.addEventListener("click", (event) => {
+    const card = event.target.closest(".learnMoreRelatedCard");
+    if (card) openItemInfo(card.dataset.item);
+  });
+  itemDialog.addEventListener("click", (event) => {
+    if (event.target === itemDialog) closeItemInfo();
+  });
 
   function renderCards() {
     const term = search.value.trim().toLowerCase();
@@ -252,12 +529,13 @@ function renderLearnMore() {
     });
 
     list.replaceChildren();
-    items.forEach(([key, item]) => {
+    items.forEach(([key, item], index) => {
       const card = document.createElement("button");
       const name = document.createElement("h2");
       const imageHolder = document.createElement("span");
       const category = document.createElement("h3");
       card.className = "bubble learnMoreBubble learnMoreItemButton";
+      card.style.setProperty("--row-fade-delay", `${index * 110}ms`);
       card.type = "button";
       card.dataset.item = key;
       name.textContent = item.name || key;
@@ -279,6 +557,8 @@ function renderLearnMore() {
   itemsPromise.then(() => {
     if (!list.isConnected) return;
     renderCards();
+    const requestedItem = params.get("item");
+    if (requestedItem) openItemInfo(requestedItem);
   });
   search.addEventListener("input", renderCards);
   sort.addEventListener("change", renderCards);
@@ -297,6 +577,7 @@ function renderLearnMore() {
 
 function renderItem(itemKey) {
   useTemplate("item");
+  setupInlineDispensing(app);
   const itemName = app.querySelector("#itemName");
   const description = app.querySelector("#itemDescription");
   const image = app.querySelector("#itemImage");
@@ -413,7 +694,7 @@ function renderDispensing(params) {
       app.querySelector(".dispensingSpinner")?.remove();
       confirmationTimer = window.setTimeout(() => {
         window.alert(`${itemName} has been dispensed. Thank you for using the kiosk`);
-        navigate("home");
+        showWelcomeScreen();
       }, 150);
     }, 4000);
   });
@@ -534,7 +815,7 @@ function renderBackground() {
     fallingBackground.querySelectorAll(".fallingMagnifier").forEach(applyMagnifierSettings);
   });
   app.querySelector("#backgroundDefaults").addEventListener("click", () => {
-    [[count, 40], [speed, 1], [size, 2.5], [opacity, 14]].forEach(([input, value]) => {
+    [[count, 80], [speed, 1], [size, 2.5], [opacity, 14]].forEach(([input, value]) => {
       input.value = value;
       input.dispatchEvent(new Event("input", { bubbles: true }));
     });
@@ -569,6 +850,7 @@ function renderBackground() {
 function renderRoute() {
   window.clearTimeout(dispenseTimer);
   window.clearTimeout(confirmationTimer);
+  activeInlineDispensing = null;
   window.scrollTo(0, 0);
   const { route, params } = currentLocation();
   switch (route) {
@@ -579,7 +861,7 @@ function renderRoute() {
     case "settings": renderSettings(); break;
     case "contact": renderContact(); break;
     case "dispense": renderDispense(); break;
-    case "learn-more": renderLearnMore(); break;
+    case "learn-more": renderLearnMore(params); break;
     case "item": renderItem(params.get("name") || "Dispensable"); break;
     case "dispensing": renderDispensing(params); break;
     default: navigate("home"); return;
@@ -599,13 +881,19 @@ app.addEventListener("click", (event) => {
 
   const learnButton = event.target.closest(".learnMoreItemButton");
   if (learnButton) {
-    navigate("item", { name: learnButton.dataset.item });
+    if (app.querySelector("#dispenseList")) {
+      navigate("learn-more", { item: learnButton.dataset.item });
+    } else {
+      navigate("item", { name: learnButton.dataset.item });
+    }
     return;
   }
 
   const dispenseButton = event.target.closest(".dispenseItemButton");
   if (dispenseButton) {
-    if (dispenseButton.dataset.sourceItem) {
+    if (activeInlineDispensing) {
+      activeInlineDispensing(dispenseButton.dataset.item, dispenseButton);
+    } else if (dispenseButton.dataset.sourceItem) {
       navigate("dispensing", {
         source: dispenseButton.dataset.sourceItem,
         index: dispenseButton.dataset.dispenseIndex || "0"
@@ -613,6 +901,50 @@ app.addEventListener("click", (event) => {
     } else {
       navigate("dispensing", { item: dispenseButton.dataset.item });
     }
+  }
+});
+
+function showWelcomeScreen() {
+  window.clearTimeout(dispenseTimer);
+  window.clearTimeout(confirmationTimer);
+  window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#home`);
+  renderHome();
+  welcomeScreen.hidden = false;
+  document.body.classList.add("welcome-active");
+}
+
+function dismissWelcome() {
+  const welcome = document.querySelector("#welcomeScreen");
+  if (!welcome || welcome.classList.contains("is-leaving")) return;
+  let dismissed = false;
+  let fallbackTimer;
+
+  const finish = () => {
+    if (dismissed) return;
+    dismissed = true;
+    window.clearTimeout(fallbackTimer);
+    welcome.hidden = true;
+    welcome.classList.remove("is-leaving");
+    document.body.classList.remove("welcome-active");
+    window.history.replaceState(null, "", `${window.location.pathname}${window.location.search}#home`);
+    renderRoute();
+  };
+
+  welcome.addEventListener("animationend", finish, { once: true });
+  welcome.classList.add("is-leaving");
+  if (document.documentElement.classList.contains("reduced-motion") || reducedMotionPreference.matches) {
+    finish();
+  } else {
+    fallbackTimer = window.setTimeout(finish, 550);
+  }
+}
+
+const welcomeScreen = document.querySelector("#welcomeScreen");
+welcomeScreen.addEventListener("click", dismissWelcome);
+welcomeScreen.addEventListener("keydown", (event) => {
+  if (event.key === "Enter" || event.key === " ") {
+    event.preventDefault();
+    dismissWelcome();
   }
 });
 
