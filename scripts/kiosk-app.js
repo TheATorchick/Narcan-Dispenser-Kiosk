@@ -257,13 +257,30 @@ let activeInlineDispensing = null;
 function setupInlineDispensing(scope) {
   const overlay = scope.querySelector("#dispensingOverlay");
   if (!overlay) return;
-  const spinner = overlay.querySelector(".dispensingSpinner");
+  const animation = overlay.querySelector(".dispensingAnimation");
   const cancelButton = overlay.querySelector(".dispensingCancel");
   const names = overlay.querySelectorAll("[data-dispensed-item]");
   let opener;
   let closeTimer;
+  let animationTimer;
+  let frame = 1;
+
+  function stopAnimation() {
+    window.clearInterval(animationTimer);
+  }
+
+  function startAnimation() {
+    stopAnimation();
+    frame = 1;
+    animation.src = `images/Animation/Load${frame}.svg`;
+    animationTimer = window.setInterval(() => {
+      frame = frame % 9 + 1;
+      animation.src = `images/Animation/Load${frame}.svg`;
+    }, 2000 / 9);
+  }
 
   function closeOverlay() {
+    stopAnimation();
     window.clearTimeout(dispenseTimer);
     window.clearTimeout(confirmationTimer);
     if (reducedMotionPreference.matches || document.documentElement.classList.contains("reduced-motion")) {
@@ -295,7 +312,8 @@ function setupInlineDispensing(scope) {
     opener = trigger;
     overlay.classList.remove("is-closing");
     overlay.classList.remove("is-opening");
-    spinner.hidden = false;
+    animation.hidden = false;
+    startAnimation();
     cancelButton.hidden = false;
     names.forEach((node) => { node.textContent = itemName; });
     if (!overlay.open) overlay.showModal();
@@ -304,7 +322,9 @@ function setupInlineDispensing(scope) {
     cancelButton.focus();
 
     dispenseTimer = window.setTimeout(() => {
-      spinner.hidden = true;
+      stopAnimation();
+      frame = 9;
+      animation.src = `images/Animation/Load${frame}.svg`;
       cancelButton.hidden = true;
       confirmationTimer = window.setTimeout(() => {
         window.alert(`${itemName} has been dispensed. Thank you for using the kiosk`);
@@ -669,6 +689,12 @@ function renderDispensing(params) {
   setDocumentTitle("Dispensing");
   const nameNode = app.querySelector("#dispensedItemName");
   const secondNameNode = app.querySelector("#dispensedItemNameAgain");
+  const animation = app.querySelector(".dispensingAnimation");
+  let frame = 1;
+  const animationTimer = window.setInterval(() => {
+    frame = frame % 9 + 1;
+    if (animation?.isConnected) animation.src = `images/Animation/Load${frame}.svg`;
+  }, 2000 / 9);
   const directItem = params.get("item");
   const source = params.get("source");
   const index = Number.parseInt(params.get("index") || "0", 10);
@@ -679,6 +705,7 @@ function renderDispensing(params) {
 
   app.querySelector("#cancelDispensing").addEventListener("click", () => {
     canceled = true;
+    window.clearInterval(animationTimer);
     window.clearTimeout(dispenseTimer);
     window.clearTimeout(confirmationTimer);
     app.querySelector(".dispensingPanel").classList.add("is-canceling");
@@ -691,7 +718,8 @@ function renderDispensing(params) {
     secondNameNode.textContent = itemName;
     setDocumentTitle(`${itemName} Dispensed`);
     dispenseTimer = window.setTimeout(() => {
-      app.querySelector(".dispensingSpinner")?.remove();
+      window.clearInterval(animationTimer);
+      if (animation) animation.src = "images/Animation/Load9.svg";
       confirmationTimer = window.setTimeout(() => {
         window.alert(`${itemName} has been dispensed. Thank you for using the kiosk`);
         showWelcomeScreen();
